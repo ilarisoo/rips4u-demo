@@ -1,0 +1,1350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#141414">
+<meta property="og:title" content="Rips4u demo">
+<meta property="og:description" content="Rips4u prototype demo. Every visit starts with Rips to spend, cards in the vault, and sealed packs to open.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141414'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%23f2b33d'/%3E%3C/svg%3E">
+<title>Rips4u</title>
+<meta name="description" content="Rips4u demo. Pick a real sealed pack, watch it opened on camera, keep, ship, or sell back the cards.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..900&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#141414;--surface:#1c1c1c;--sunk:#262626;--ink:#fafafa;--muted:#a3a3a3;--line:rgba(255,255,255,.1);
+  --dim:rgba(250,250,250,.42);--faint:rgba(250,250,250,.3);--tile-a:#171717;--tile-b:#0a0a0a;
+  --accent:#FF5B42;--accent-ink:#1A0A06;--accent-soft:#3A1C16;
+  --good:#4CC38A;--good-soft:#12301F;--warn:#E0A847;--warn-soft:#33270F;
+  --mat:#0a0a0a;--mat-ink:#fafafa;--mat-line:rgba(255,255,255,.1);--mat-muted:#a3a3a3;
+  --holo:conic-gradient(from 210deg at 35% 40%,#ff9db3,#ffd77e,#c6f3a2,#86dcff,#b8a4ff,#ff9db3);
+  --shadow:none;
+  --slab:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.04));
+  --r:16px;--tabh:0px;
+  --disp:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
+:root[data-theme="light"]{
+  --paper:#f5f5f5;--surface:#ffffff;--sunk:#ebebeb;--ink:#111111;--muted:#5c5c5c;--line:rgba(0,0,0,.1);
+  --dim:rgba(17,17,17,.42);--faint:rgba(17,17,17,.42);--tile-a:#ffffff;--tile-b:#ededed;
+  --accent:#D63A22;--accent-ink:#FFFFFF;--accent-soft:#F8DDD6;
+  --good:#1D7F55;--good-soft:#D9F0E5;--warn:#9A6412;--warn-soft:#F5E9D2;
+  --slab:linear-gradient(180deg,rgba(255,255,255,.9),rgba(225,230,236,.75));
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:70}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.small{font-size:13px}
+.muted{color:var(--muted)}
+.fine{font-size:13px;color:var(--muted);margin:10px 0 0}
+.kick{font:600 11.5px/1.2 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}
+.h1{font-family:var(--disp);font-weight:800;font-size:clamp(40px,6.2vw,76px);line-height:.98;letter-spacing:-.035em;margin:0}
+.h2{font-family:var(--disp);font-weight:700;font-size:clamp(26px,3.2vw,38px);line-height:1.06;letter-spacing:-.025em;margin:0}
+.h3{font-family:var(--disp);font-weight:700;font-size:19px;line-height:1.2;margin:0 0 8px}
+.dim{color:var(--dim)}
+.lede{font-size:clamp(17px,1.6vw,19px);color:var(--muted);max-width:56ch;margin:18px 0 26px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row.end{justify-content:flex-end}
+.row.center{justify-content:center}
+.center{text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;border:1px solid transparent;font-weight:600;font-size:15.5px;cursor:pointer;text-decoration:none;transition:transform .12s ease,background-color .12s ease,border-color .12s ease;white-space:nowrap}
+.btn.sm{min-height:38px;padding:0 16px;font-size:14px;border-radius:999px}
+.btn.wide{width:100%}
+.btn-p{background:var(--ink);color:var(--paper)}
+.btn-p:hover:not(:disabled){opacity:.86}
+.btn-s{background:var(--sunk);border-color:transparent;color:var(--ink)}
+.btn-s:hover:not(:disabled){background:color-mix(in srgb,var(--sunk) 86%,var(--ink))}
+.btn-g{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:20px}
+.tag{display:inline-block;font:600 11.5px/1 var(--mono);padding:5px 7px;border-radius:6px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 var(--mono);padding:7px 10px;border-radius:999px;background:var(--good-soft);color:var(--good)}
+.warnbox{background:var(--warn-soft);color:var(--warn);padding:10px 12px;border-radius:10px;font-weight:600;font-size:14.5px;margin:12px 0}
+.goodbox{background:var(--good-soft);color:var(--good);padding:10px 12px;border-radius:10px;font-weight:600;font-size:14.5px;margin:12px 0}
+.token{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffeeb5,#e9ad2a 58%,#b47a0e);box-shadow:inset 0 0 0 2px rgba(0,0,0,.1);display:inline-block;flex:none}
+.token.lg{width:30px;height:30px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);background:color-mix(in srgb,var(--paper) 90%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.demo{background:#0a0a0a;color:#a3a3a3;font:500 12px/1.3 var(--mono);padding:7px 0;letter-spacing:.01em}
+.demo b{color:#fafafa;font-weight:600}
+.bar{display:flex;align-items:center;gap:18px;height:60px}
+.logo{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.045em;text-decoration:none;line-height:1}
+.logo span{color:var(--accent)}
+.nav{display:flex;gap:2px}
+.nav a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:600;font-size:14.5px;color:var(--muted)}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--sunk);color:var(--ink)}
+.howlink{display:none;font-weight:600;font-size:14px;color:var(--muted);text-decoration:none}
+.bal{margin-left:auto;display:flex;align-items:center;gap:8px;padding:6px 14px 6px 7px;border-radius:999px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);text-decoration:none;font-weight:650;font-variant-numeric:tabular-nums}
+.brk{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tabs{display:none}
+@media (max-width:780px){
+  :root{--tabh:calc(62px + env(safe-area-inset-bottom,0px))}
+  .nav{display:none}
+  .howlink{display:inline;margin-left:auto}
+  .bal{margin-left:0}
+  .tabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+  .tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:62px;text-decoration:none;font-size:11.5px;font-weight:600;color:var(--muted)}
+  .tabs a[aria-current="page"]{color:var(--accent)}
+  .tabs svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  body{padding-bottom:var(--tabh)}
+}
+
+/* home */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;margin-top:28px;padding:clamp(28px,5vw,64px);border-radius:24px;border:1px solid var(--line);background:linear-gradient(180deg,var(--tile-a),var(--tile-b));overflow:hidden}
+.fan{position:relative;height:clamp(270px,30vw,360px)}
+.fan .pack{position:absolute;width:clamp(118px,14vw,168px);top:46%;left:50%;box-shadow:0 30px 60px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.18)}
+.fan .pack:nth-child(1){transform:translate(-112%,-50%) rotate(-11deg)}
+.fan .pack:nth-child(2){transform:translate(-50%,-56%);z-index:2}
+.fan .pack:nth-child(3){transform:translate(12%,-50%) rotate(11deg)}
+.fan .pack-c{font-size:clamp(22px,2.6vw,32px)}
+.live{position:absolute;left:50%;bottom:0;transform:translateX(-50%);z-index:3;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(10,10,10,.8);border:1px solid rgba(255,255,255,.12);font:600 12px/1 var(--mono);color:#fafafa;white-space:nowrap}
+.live i{width:8px;height:8px;border-radius:50%;background:#ff4b3a;animation:blink 1.2s steps(2,start) infinite}
+.heronotes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.heronotes>div{padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
+.heronotes b{display:block;font-family:var(--disp);font-weight:700;font-size:16.5px}
+.heronotes span{color:var(--muted);font-size:14px}
+.sec{padding:52px 0 0}
+.sech{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.more{color:var(--muted);text-decoration:none;font-weight:600;font-size:14.5px;white-space:nowrap}
+.more:hover{color:var(--ink)}
+.pulls{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:26px;text-align:left}
+.pulls figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pulls figcaption{display:flex;flex-direction:column;font-size:13px;color:var(--muted);line-height:1.3}
+.pulls figcaption b{color:var(--ink);font-weight:600}
+.steps3{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.steps3 li{counter-increment:s;padding:24px}
+.steps3 li::before{content:"0" counter(s);display:block;font:700 44px/1 var(--disp);letter-spacing:-.04em;color:var(--faint);margin-bottom:26px}
+.steps3 b{display:block;font-family:var(--disp);font-weight:700;font-size:19px;margin-bottom:6px}
+.steps3 p{margin:0;color:var(--muted);font-size:14.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.two>*{min-width:0}
+.slim{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;margin-top:52px;padding:18px 22px;border-radius:16px;border:1px solid var(--line);color:var(--muted);font-size:14.5px}
+.slim b{color:var(--ink)}
+@media (max-width:960px){.hero{grid-template-columns:1fr;gap:8px}}
+@media (max-width:780px){.pulls{grid-template-columns:repeat(3,1fr)}.steps3,.heronotes{grid-template-columns:1fr}}
+@media (max-width:640px){.two{grid-template-columns:1fr}}
+@media (max-width:460px){.fan .pack{width:104px}.fan{height:240px}}
+@media (max-width:420px){.pulls{grid-template-columns:repeat(2,1fr)}}
+
+/* the live table */
+.mat{background:var(--mat);color:var(--mat-ink);border-radius:22px;padding:16px;border:1px solid var(--mat-line);position:relative;overflow:hidden}
+.mat-top{display:flex;justify-content:space-between;align-items:center;font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mat-muted);margin-bottom:14px}
+.rec{display:inline-flex;align-items:center;color:var(--mat-ink)}
+.rec i{width:8px;height:8px;border-radius:50%;background:#ff4b3a;margin-right:7px;animation:blink 1.2s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
+.mat-foot{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.mat-k{font:600 10.5px/1.2 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--mat-muted);margin-bottom:4px}
+.mat-v{font-weight:650;font-size:14.5px;line-height:1.25}
+.mat-v.mono{font-size:13px}
+
+/* packs */
+.pack{display:block;aspect-ratio:5/7;border-radius:10px;position:relative;overflow:hidden;color:#fff;background:linear-gradient(160deg,hsl(var(--h) 72% 58%),hsl(calc(var(--h) + 38) 66% 34%));box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.pack::before,.pack::after{content:"";position:absolute;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.38) 0 4px,rgba(0,0,0,.16) 4px 8px)}
+.pack::before{top:0}.pack::after{bottom:0}
+.pack .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 45%,transparent 60%)}
+.pack-g{position:absolute;left:12px;top:20px;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.pack-c{position:absolute;left:12px;right:12px;bottom:34px;font-family:var(--disp);font-weight:800;font-size:clamp(26px,4.2vw,40px);line-height:.9;letter-spacing:-.03em}
+.pack-n{position:absolute;left:12px;bottom:18px;font:500 11px/1 var(--mono);opacity:.85}
+.pack.sm{width:84px;flex:none}.pack.sm .pack-c{font-size:20px;bottom:26px;left:8px}.pack.sm .pack-g{left:8px;top:16px;font-size:9px}.pack.sm .pack-n{left:8px;bottom:14px;font-size:9px}
+.pack.xs{width:56px;flex:none}.pack.xs .pack-c{font-size:14px;bottom:18px;left:6px}.pack.xs .pack-g,.pack.xs .pack-n{display:none}
+.pack.md{width:150px;margin:0 auto 18px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:16px}
+.grid4>*{min-width:0}
+@media (max-width:520px){.grid4{grid-template-columns:repeat(2,1fr);gap:12px}.slabt{padding:10px}.slab-b .btn{padding:0 10px}}
+.prod{display:flex;flex-direction:column;gap:12px;padding:12px;text-decoration:none;position:relative;transition:transform .15s ease,border-color .15s ease}
+.prod-art{display:grid;place-items:center;aspect-ratio:1/1;border-radius:12px;background:radial-gradient(55% 55% at 50% 55%,hsl(var(--h) 70% 50% / .32),transparent 72%),var(--sunk)}
+.prod-art .pack{width:52%;box-shadow:0 16px 30px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.18)}
+.prod-art .pack-g{left:8px;top:14px;font-size:9px}.prod-art .pack-n{left:8px;bottom:12px;font-size:9px}
+.prod-art .pack-c{left:8px;right:8px;bottom:24px;font-size:clamp(16px,2vw,24px)}
+.prod:hover{border-color:color-mix(in srgb,var(--ink) 24%,transparent)}
+.prod:hover .btn-s{background:var(--ink);color:var(--paper)}
+.prod:hover{transform:translateY(-2px)}
+.prod-b{display:flex;flex-direction:column;gap:5px}
+.prod-t{font-weight:750;font-size:16px;line-height:1.2}
+.prod-p{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.prod-p b{font-size:18px}
+.prod-p .muted{font-size:13px}
+.left{display:flex;flex-direction:column;gap:5px;margin-top:4px}
+.barx{display:block;height:5px;border-radius:9px;background:var(--sunk);overflow:hidden}
+.barx i{display:block;height:100%;background:var(--ink)}
+.est{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.est>span{display:flex;flex-direction:column;padding:7px 8px;border-radius:9px;background:var(--sunk);font-size:12px;color:var(--muted);line-height:1.2}
+.est b{font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums}
+.badge.hot{background:var(--accent);color:#fff}
+.ripcol{display:grid;gap:16px;min-width:0}
+.ripcol>*{min-width:0}
+.trk-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.trk .vstats{margin:6px 0 10px}
+.badge{position:absolute;top:20px;right:20px;font:600 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--paper);color:var(--ink)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.filters a{padding:8px 16px;border-radius:999px;border:1px solid transparent;text-decoration:none;font-weight:600;font-size:14.5px;background:var(--sunk)}
+.filters a[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{font:600 11px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:0}
+
+/* rip */
+.back{display:inline-flex;align-items:center;gap:6px;margin:22px 0 14px;font-weight:600;color:var(--muted);text-decoration:none}
+.back::before{content:"";width:8px;height:8px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg)}
+.ripgrid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:start;padding-bottom:40px}
+@media (max-width:880px){.ripgrid{grid-template-columns:1fr}}
+.phead{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.slots{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:7px;margin:14px 0 16px}
+@media (max-width:560px){.slots{grid-template-columns:repeat(6,1fr)}}
+.slot{aspect-ratio:3/4;border-radius:7px;border:0;cursor:pointer;color:#fff;font:600 13px var(--mono);background:linear-gradient(170deg,hsl(var(--h) 62% 54%),hsl(calc(var(--h) + 30) 60% 32%));box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .12s ease}
+.slot:hover:not(:disabled){transform:translateY(-2px)}
+.slot.gone{background:var(--sunk);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line);cursor:not-allowed;opacity:.75}
+.slot.on{outline:3px solid var(--ink);outline-offset:2px;transform:translateY(-3px)}
+.choice{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer}
+.opt input{grid-row:span 2;margin-top:4px;accent-color:var(--accent)}
+.opt span{color:var(--muted);font-size:14px}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.consent{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--warn-soft);margin-top:12px;font-weight:600;font-size:14.5px;cursor:pointer}
+.consent input{margin-top:4px;accent-color:var(--accent);flex:none}
+.sum{display:grid;gap:8px;margin:16px 0;padding:14px;border-radius:12px;background:var(--sunk);font-size:15px}
+.sum>div{display:flex;justify-content:space-between;gap:12px}
+.sum span{color:var(--muted)}
+.sum b{text-align:right}
+.sum .tot{border-top:1px solid var(--line);padding-top:8px}
+.queue,.film{max-width:760px;margin:24px auto 40px}
+.qbody{padding:18px 6px 8px}
+.qbody .kick{color:#ffb4a6}
+.light{color:var(--mat-ink)}
+.prog{height:6px;border-radius:9px;background:var(--mat-line);overflow:hidden;margin:22px 0}
+.prog i{display:block;height:100%;width:0;background:#ff5b42;animation:fill var(--qms,2.2s) linear forwards}
+@keyframes fill{to{width:100%}}
+.qsteps{list-style:none;padding:0;margin:0;display:grid;gap:10px;font:500 14px var(--mono);color:var(--mat-muted)}
+.qsteps li{opacity:0;animation:fadein .3s ease forwards}
+.qsteps li:nth-child(1){animation-delay:.2s}.qsteps li:nth-child(2){animation-delay:.9s}.qsteps li:nth-child(3){animation-delay:1.6s}
+.qsteps li::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#4CC38A;margin-right:10px}
+@keyframes fadein{to{opacity:1}}
+.stagebox{position:relative;height:330px;display:grid;place-items:center}
+.fpack{width:150px;aspect-ratio:5/7;border-radius:10px;position:relative;z-index:2;color:#fff;background:linear-gradient(160deg,hsl(var(--h) 72% 58%),hsl(calc(var(--h) + 38) 66% 34%));box-shadow:0 20px 40px rgba(0,0,0,.4);animation:wob .45s ease-in-out .15s 2,drop .7s ease-in 2.1s forwards}
+.fpack .pack-c{font-size:34px}
+.fstrip{position:absolute;left:0;right:0;top:0;height:20%;border-radius:10px 10px 0 0;background:linear-gradient(160deg,hsl(var(--h) 60% 66%),hsl(var(--h) 60% 48%));border-bottom:2px dashed rgba(255,255,255,.7);transform-origin:0 100%;animation:tear .8s cubic-bezier(.5,0,.75,0) 1.15s forwards}
+@keyframes wob{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes tear{30%{transform:rotate(-6deg)}100%{transform:translate(90px,-110px) rotate(-38deg);opacity:0}}
+@keyframes drop{to{transform:translateY(150px);opacity:0}}
+.fcards{position:absolute;inset:0;display:grid;place-items:center;z-index:1}
+.fcards .tc{position:absolute;width:118px;opacity:0;animation:rise .7s ease-out forwards;animation-delay:calc(1.75s + var(--i) * .16s)}
+@keyframes rise{from{transform:translateY(40px);opacity:0}to{transform:translateY(calc(-14px - var(--i) * 8px)) rotate(calc((var(--i) - 1) * 7deg));opacity:1}}
+.revhead{margin:26px 0 18px}
+.revgrid{display:grid;grid-template-columns:170px 1fr;gap:24px;align-items:start;margin-bottom:20px}
+@media (max-width:620px){.revgrid{grid-template-columns:1fr}.deck{margin:0 auto}}
+.deck{border:0;background:none;padding:0;cursor:pointer;width:150px;position:relative;display:block}
+.deck .tc{box-shadow:5px 5px 0 -1px var(--sunk),10px 10px 0 -2px var(--line)}
+.deckn{display:block;text-align:center;margin-top:16px;color:var(--muted);font-size:13px}
+.revealed{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px}
+
+/* trading card placeholders */
+.tc{display:flex;flex-direction:column;aspect-ratio:63/88;border-radius:8px;padding:7px;position:relative;overflow:hidden;color:#fff;background:linear-gradient(165deg,hsl(var(--h) 50% 48%),hsl(calc(var(--h) + 28) 58% 26%));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 14px rgba(10,14,20,.18);container-type:inline-size;text-align:left}
+.tc-top,.tc-bot{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:10px;font-size:max(9.5px,8.5cqw);position:relative;z-index:1;line-height:1.1}
+.tc-top b{font-family:var(--disp);font-stretch:125%;font-weight:850;font-size:13px;font-size:max(12px,13cqw)}
+.tc-top span{font-family:var(--mono);opacity:.85}
+.tc-bot b{font-weight:750}
+.tc-bot .mono{opacity:.9}
+.win{flex:1;margin:6px 0;border-radius:5px;background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.3);position:relative;z-index:1;display:flex;align-items:flex-end;padding:5px}
+.win em{font-style:normal;font-size:max(9px,7.5cqw);opacity:.85;line-height:1.15}
+.tc.hit{box-shadow:0 0 0 2px #ffd77e,0 6px 22px rgba(214,58,34,.28)}
+.tc.hit::after{content:"";position:absolute;inset:0;background:var(--holo);mix-blend-mode:overlay;opacity:.75;pointer-events:none}
+.tc.back{background:repeating-linear-gradient(45deg,#1f1f1f 0 7px,#2a2a2a 7px 14px);display:grid;place-items:center;box-shadow:inset 0 0 0 3px #3a3a3a}
+.tc.back::after{display:none}
+.bk{font-family:var(--disp);font-stretch:125%;font-weight:900;color:#e8edf3;font-size:16px;font-size:max(13px,15cqw);letter-spacing:-.02em;padding:4px 8px;border:2px solid #e8edf3;border-radius:6px}
+.tc.flip{animation:flip .5s ease-out}
+.tc.big{animation:flip .6s ease-out,glow 1.6s ease-out .6s}
+@keyframes flip{from{transform:perspective(700px) rotateY(90deg)}to{transform:none}}
+@keyframes glow{0%{box-shadow:0 0 0 2px #ffd77e,0 0 0 0 rgba(255,215,126,.8)}100%{box-shadow:0 0 0 2px #ffd77e,0 0 0 22px rgba(255,215,126,0)}}
+
+/* vault */
+.pagehead{padding:30px 0 6px}
+.vstats{display:flex;gap:22px;flex-wrap:wrap;margin:14px 0 4px;color:var(--muted);font-size:15px}
+.vstats b{color:var(--ink);font-size:18px;display:block}
+.vtabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:22px 0 18px;overflow-x:auto;scrollbar-width:none}
+.vtabs a{padding:10px 14px;text-decoration:none;font-weight:650;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.vtabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:14px;padding-bottom:20px}
+@media (max-width:420px){.vgrid{grid-template-columns:repeat(2,1fr);gap:12px}}
+.vt{position:relative;border:0;background:none;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:8px}
+.vt:disabled{cursor:default}
+.vt .tc,.vt .slab{transition:transform .12s ease}
+.vt.on .tc,.vt.on .slab{outline:3px solid var(--accent);outline-offset:3px}
+.vt-m{display:flex;flex-direction:column;gap:3px;font-size:13.5px}
+.vt-m b{font-weight:700;font-size:14px;line-height:1.2}
+.vt-m span{color:var(--muted)}
+.vt-m .tag{align-self:flex-start;margin-top:2px}
+.tick{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--accent);display:none;z-index:3;box-shadow:0 0 0 2px var(--surface)}
+.tick::after{content:"";position:absolute;left:8px;top:5px;width:6px;height:10px;border:solid var(--accent-ink);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.vt.on .tick{display:block}
+.vt.sold{opacity:.45}
+.abar{position:sticky;bottom:calc(12px + var(--tabh));z-index:20;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;margin:8px 0 30px}
+.abar-t{display:flex;flex-direction:column}
+.abar .fine{flex-basis:100%;margin:0}
+.srow{display:flex;gap:16px;align-items:center;padding:14px;margin-bottom:12px;flex-wrap:wrap}
+.srow-b{flex:1;min-width:180px;display:flex;flex-direction:column;gap:3px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+
+/* slabs */
+.slab{display:block;padding:8px;border-radius:12px;background:var(--slab);border:1px solid var(--line);box-shadow:var(--shadow)}
+.slab-l{display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 8px;margin-bottom:8px;font-size:11px;line-height:1.2}
+.slab-l>span:first-child{display:flex;flex-direction:column;min-width:0}
+.slab-l b,.slab-l .mono{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slab-l .mono{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slab-g{font-family:var(--disp);font-stretch:125%;font-weight:900;font-size:22px;color:var(--accent);line-height:1}
+.slabt{padding:12px;display:flex;flex-direction:column;gap:12px}
+.slab-b{display:flex;flex-direction:column;gap:4px}
+.slab-b .btn{margin-top:8px}
+
+/* rips */
+.cgrid{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;margin-bottom:16px}
+@media (max-width:820px){.cgrid{grid-template-columns:1fr}}
+.big{display:flex;align-items:center;gap:12px;font-family:var(--disp);font-stretch:125%;font-weight:850;font-size:44px;letter-spacing:-.02em;margin:6px 0 10px;font-variant-numeric:tabular-nums}
+.bundles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.bundle{position:relative;display:flex;flex-direction:column;gap:2px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;text-align:left}
+.bundle:hover:not(:disabled){border-color:var(--accent)}
+.bundle:disabled{opacity:.45;cursor:not-allowed}
+.bundle b{font-size:19px}
+.bundle span{color:var(--muted);font-size:13.5px}
+.bundle i{position:absolute;top:10px;right:10px;font:700 11px/1 var(--mono);font-style:normal;color:var(--good);background:var(--good-soft);padding:4px 6px;border-radius:6px}
+.meter{height:8px;border-radius:9px;background:var(--sunk);overflow:hidden;margin:10px 0}
+.meter i{display:block;height:100%;background:var(--ink)}
+.limrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:12px 0}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.fld input,.fld select{min-height:46px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;min-width:150px}
+.hl{width:100%;border-collapse:collapse;font-size:14.5px}
+.hl td{padding:9px 6px;border-bottom:1px solid var(--line)}
+.hl tr:last-child td{border-bottom:0}
+.hl .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:650;white-space:nowrap}
+.plus{color:var(--good)}
+
+/* how */
+.chain{list-style:none;padding:0;margin:0;display:grid;gap:0;counter-reset:c}
+.chain li{counter-increment:c;display:grid;grid-template-columns:44px 1fr;gap:14px;position:relative;padding-bottom:22px}
+.chain li::before{content:counter(c);display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font:700 15px var(--mono);color:var(--ink);z-index:1}
+.chain li::after{content:"";position:absolute;left:21px;top:44px;bottom:0;width:2px;background:var(--line)}
+.chain li:last-child::after{display:none}
+.chain b{display:block;font-weight:750;font-size:16.5px;margin:10px 0 3px}
+.chain p{margin:0;color:var(--muted)}
+.fp textarea{width:100%;min-height:170px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);font:500 13px/1.55 var(--mono);resize:vertical}
+.fpv{display:block;word-break:break-all;font:500 12.5px/1.5 var(--mono);padding:10px 12px;border-radius:10px;background:var(--sunk);margin:8px 0 14px}
+#fpres{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+#fpres .mono{word-break:break-all}
+.faq details{border-bottom:1px solid var(--line);padding:4px 0}
+.faq summary{cursor:pointer;font-weight:700;padding:12px 0;list-style:none;display:flex;justify-content:space-between;gap:14px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:600 20px/1 var(--mono);color:var(--accent)}
+.faq details[open] summary::after{content:"\2212"}
+.faq p{margin:0 0 14px;color:var(--muted);max-width:70ch}
+
+/* footer, dialog, toast */
+.foot{margin-top:56px;padding:34px 0 30px;border-top:1px solid var(--line);background:var(--paper)}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px;margin-bottom:18px}
+.fgrid b{display:block;margin-bottom:8px}
+.fgrid a{display:block;color:var(--muted);text-decoration:none;padding:3px 0}
+.fgrid a:hover{color:var(--ink)}
+@media (max-width:640px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+dialog{border:0;border-radius:18px;padding:0;width:calc(100vw - 32px);max-width:500px;background:var(--surface);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(8,12,18,.6)}
+.dlg{padding:22px}
+.dlg p{margin:8px 0}
+#toast{position:fixed;left:50%;bottom:calc(20px + var(--tabh));transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:80;background:var(--ink);color:var(--paper);padding:12px 16px;border-radius:12px;font-weight:600;font-size:14.5px;max-width:calc(100vw - 32px);box-shadow:0 12px 30px rgba(0,0,0,.3);transition:opacity .2s ease,transform .2s ease}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}}
+@media (max-width:420px){.tbl th,.tbl td{padding:8px 5px}.tbl th{letter-spacing:.08em}.tbl th.n{white-space:normal}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="demo"><div class="wrap"><b>Demo prototype.</b> No payments are taken. The packs, cards, and films on this page don't exist. Every visit starts a fresh demo.</div></div>
+  <div class="bar wrap">
+    <a class="logo" href="#home" aria-label="Rips4u home">Rips<span>4</span>u</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#packs" data-nav="packs">Packs</a>
+      <a href="#vault" data-nav="vault">Vault</a>
+      <a href="#shop" data-nav="shop">Graded shop</a>
+      <a href="#wallet" data-nav="wallet">Rips</a>
+      <a href="#how" data-nav="how">How it works</a>
+    </nav>
+    <a class="howlink" href="#how">How it works</a>
+    <a class="bal" href="#wallet" aria-label="Rips balance"><i class="token"></i><span id="bal">0</span></a>
+  </div>
+  <div id="brk"></div>
+</header>
+
+<main id="view" class="wrap"></main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a class="logo" href="#home">Rips<span>4</span>u</a>
+        <p class="muted">Real sealed packs, opened on camera and shipped from our vault in [WAREHOUSE_CITY].</p>
+      </div>
+      <div><b>Service</b><a href="#packs">Packs</a><a href="#vault">Vault</a><a href="#shop">Graded shop</a><a href="#wallet">Rips and limits</a></div>
+      <div><b>Help</b><a href="#how">How it works</a><a href="#how/faq">Questions</a><a href="#wallet">Take a break</a></div>
+    </div>
+    <p class="fine">This page is a demo prototype. No payments are taken, and the packs, cards, and films shown don't exist. Card names and artwork are left out on purpose.</p>
+    <p class="fine">Rips4u is not affiliated with, endorsed by, or sponsored by The Pokémon Company, Nintendo, Creatures, GAME FREAK, or Bandai. Pokémon and One Piece are trademarks of their owners. Operator [COMPANY], registered in [COUNTRY]. 18+ only. If playing stops being fun, contact [HELPLINE].</p>
+    <p style="margin:16px 0 0"><button class="btn btn-g sm" data-act="reset">Reset demo</button></p>
+  </div>
+</footer>
+
+<nav class="tabs" aria-label="Main">
+  <a href="#home" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+  <a href="#packs" data-nav="packs"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M6 7h12M6 17h12"/></svg>Packs</a>
+  <a href="#vault" data-nav="vault"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3"/><path d="M3 9h2M3 16h2"/></svg>Vault</a>
+  <a href="#shop" data-nav="shop"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 8h14M9 5.5h6"/></svg>Shop</a>
+  <a href="#wallet" data-nav="wallet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg>Rips</a>
+</nav>
+
+<dialog id="dlg" aria-label="Dialog"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const now = () => Date.now();
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmtR = n => Math.round(n).toLocaleString('en-GB');
+const eur = c => '€' + (c / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const time = t => new Date(t).toLocaleString('en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+const day = t => new Date(t).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+const range = n => Array.from({length: n}, (_, i) => i + 1);
+const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function hash(str) {
+  let h = 2166136261 >>> 0;
+  for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+
+const GAMES = {
+  pk: {name: 'Pokémon', packs: 36, cards: 10, set: 188, box: 'display'},
+  op: {name: 'One Piece', packs: 24, cards: 12, set: 121, box: 'box'}
+};
+const PRODUCTS = [
+  {id: 'me2', g: 'pk', set: 'Phantasmal Flames', code: 'ME2', price: 690, vm: 1.04, box: 'B-2611-0051', isNew: true, hue: 14},
+  {id: 'me1', g: 'pk', set: 'Mega Evolution', code: 'ME1', price: 690, vm: 1.01, box: 'B-2611-0042', hue: 205},
+  {id: 'sv10', g: 'pk', set: 'Destined Rivals', code: 'SV10', price: 760, vm: 1.13, box: 'B-2610-0198', hue: 338},
+  {id: 'sv9', g: 'pk', set: 'Journey Together', code: 'SV9', price: 640, vm: 0.92, box: 'B-2610-0171', hue: 150},
+  {id: 'op13', g: 'op', set: 'Carrying On His Will', code: 'OP-13', price: 590, vm: 1.15, box: 'B-2611-0066', isNew: true, hue: 44},
+  {id: 'op12', g: 'op', set: 'Legacy of the Master', code: 'OP-12', price: 560, vm: 1.07, box: 'B-2611-0013', hue: 268},
+  {id: 'op11', g: 'op', set: 'A Fist of Divine Speed', code: 'OP-11', price: 540, vm: 1.04, box: 'B-2610-0207', hue: 190},
+  {id: 'op10', g: 'op', set: 'Royal Blood', code: 'OP-10', price: 520, vm: 0.97, box: 'B-2610-0154', hue: 0}
+];
+const P = id => PRODUCTS.find(p => p.id === id);
+
+const RAR = {
+  pk: {C: ['Common', 3, 10], U: ['Uncommon', 5, 15], RH: ['Reverse holo', 10, 40], R: ['Rare', 15, 60], RR: ['Double rare', 80, 480], UR: ['Ultra rare', 320, 2400], IR: ['Illustration rare', 400, 2880], SIR: ['Special illustration rare', 1920, 19200], HR: ['Hyper rare', 960, 6400]},
+  op: {C: ['Common', 3, 8], UC: ['Uncommon', 4, 12], R: ['Rare', 10, 50], SR: ['Super rare', 80, 800], AA: ['Alternate art', 1000, 8000], SEC: ['Secret rare', 2400, 20000], MR: ['Manga rare', 12000, 80000]}
+};
+const SLOTS = {
+  pk: ['C', 'C', 'C', 'C', 'U', 'U', 'U', 'RH', {RH: .88, IR: .105, SIR: .015}, {R: .70, RR: .18, UR: .06, IR: .04, SIR: .015, HR: .005}],
+  op: ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'UC', 'UC', 'UC', {R: .70, SR: .24, AA: .045, SEC: .013, MR: .002}]
+};
+const HIT = new Set(['RR', 'UR', 'IR', 'SIR', 'HR', 'SR', 'AA', 'SEC', 'MR']);
+const SECRET = new Set(['UR', 'IR', 'SIR', 'HR']);
+const rarName = (g, r) => RAR[g][r][0];
+
+const ZONES = {
+  FI: ['Finland', 590, '1 to 3'],
+  SE: ['Sweden', 690, '2 to 4'],
+  BA: ['Estonia, Latvia, or Lithuania', 490, '1 to 3'],
+  DE: ['Germany', 890, '3 to 5'],
+  EU: ['Another EU country', 990, '3 to 7']
+};
+const FREE_FROM = 15000, INSURE_FROM = 10000, INSURE_RATE = .015, PER_PARCEL = 20;
+const GRADE_COST = 3900;
+const BUNDLES = [
+  {eur: 1000, extra: 0}, {eur: 2500, extra: 0}, {eur: 5000, extra: 100, pct: 2},
+  {eur: 10000, extra: 300, pct: 3}, {eur: 20000, extra: 800, pct: 4}
+];
+const SLABS = [
+  {id: 'g1', pid: 'sv10', rar: 'SIR', num: 231, grade: '10', price: 89000},
+  {id: 'g2', pid: 'op11', rar: 'AA', num: 118, grade: '10', price: 42000},
+  {id: 'g3', pid: 'me1', rar: 'SIR', num: 226, grade: '9', price: 26000},
+  {id: 'g4', pid: 'op12', rar: 'SEC', num: 119, grade: '10', price: 18900},
+  {id: 'g5', pid: 'sv9', rar: 'IR', num: 191, grade: '10', price: 12900},
+  {id: 'g6', pid: 'me2', rar: 'UR', num: 205, grade: '9.5', price: 8900},
+  {id: 'g7', pid: 'op10', rar: 'SR', num: 37, grade: '10', price: 5900},
+  {id: 'g8', pid: 'op13', rar: 'SR', num: 52, grade: '9', price: 3400}
+].map((s, i) => ({...s, grader: '[GRADER]', cert: 'DEMO-' + (4410203 + i * 1379)}));
+
+const rate = v => v < 100 ? .6 : v <= 2500 ? .8 : .85;
+const offer = v => Math.floor(v * rate(v));
+const vid = (p, pos) => 'V-' + p.box.slice(2) + '-' + String(pos).padStart(2, '0');
+function cardNo(p, num) {
+  return p.g === 'pk' ? String(num).padStart(3, '0') + '/' + GAMES.pk.set : p.code.replace('-', '') + '-' + String(num).padStart(3, '0');
+}
+
+function packCards(p, pos) {
+  const rnd = mulberry32(hash(p.box + '#' + pos));
+  const g = GAMES[p.g], plan = boxPlan(p);
+  return SLOTS[p.g].map((s, slot) => {
+    const r = typeof s === 'object' ? plan[slot][pos - 1] : s;
+    const [, lo, hi] = RAR[p.g][r];
+    const val = Math.max(1, Math.round(p.vm * Math.exp(Math.log(lo) + rnd() * (Math.log(hi) - Math.log(lo)))));
+    const num = p.g === 'pk' && SECRET.has(r) ? g.set + 1 + Math.floor(rnd() * 60) : 1 + Math.floor(rnd() * g.set);
+    return {pid: p.id, rar: r, val, num, slot};
+  });
+}
+function baseOpened(p) {
+  const rnd = mulberry32(hash(p.box));
+  const frac = .35 + rnd() * .35;
+  return range(GAMES[p.g].packs).filter(() => rnd() < frac);
+}
+
+/* box value estimates */
+const COLLATION = .65, MAX_BUY = .95;
+const PLANS = {}, MEANS = {};
+function boxPlan(p) {
+  if (PLANS[p.id]) return PLANS[p.id];
+  const n = GAMES[p.g].packs, rnd = mulberry32(hash(p.box + '#plan'));
+  return PLANS[p.id] = SLOTS[p.g].map(s => {
+    if (typeof s !== 'object') return null;
+    const [base, ...hits] = Object.keys(s), col = [];
+    for (const k of hits) {
+      const due = n * s[k], c = Math.floor(due) + (rnd() < due % 1 ? 1 : 0);
+      for (let i = 0; i < c && col.length < n; i++) col.push(k);
+    }
+    while (col.length < n) col.push(base);
+    for (let i = n - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [col[i], col[j]] = [col[j], col[i]]; }
+    return col;
+  });
+}
+function rarMean(p, r) {
+  const key = p.id + r;
+  if (!MEANS[key]) {
+    const [, lo, hi] = RAR[p.g][r], n = 200;
+    let gross = 0, buy = 0;
+    for (let i = 0; i < n; i++) {
+      const v = p.vm * Math.exp(Math.log(lo) + (i + .5) / n * (Math.log(hi) - Math.log(lo)));
+      gross += v / n; buy += v * rate(v) / n;
+    }
+    MEANS[key] = [gross, buy];
+  }
+  return MEANS[key];
+}
+function choose(n, k) {
+  if (k < 0 || k > n) return 0;
+  let r = 1;
+  for (let i = 1; i <= k; i++) r = r * (n - k + i) / i;
+  return r;
+}
+function logFact(k) {
+  let r = 0;
+  for (let i = 2; i <= k; i++) r += Math.log(i);
+  return r;
+}
+function boxEst(p) {
+  const g = GAMES[p.g], n = g.packs, open = opened(p), o = open.size, left = n - o;
+  const got = SLOTS[p.g].map(() => ({})), pulled = {}, typical = {};
+  for (const pos of open) for (const c of packCards(p, pos)) {
+    got[c.slot][c.rar] = (got[c.slot][c.rar] || 0) + 1;
+    if (HIT.has(c.rar)) pulled[c.rar] = (pulled[c.rar] || 0) + 1;
+  }
+  let logEven = 0, logRand = 0;
+  const slots = SLOTS[p.g].map((s, slot) => {
+    if (typeof s !== 'object') return null;
+    const ks = Object.keys(s).slice(1), seen = ks.map(k => got[slot][k] || 0);
+    const base = o - seen.reduce((a, b) => a + b, 0), rest = ks.map(() => 0);
+    let like = 0;
+    ks.forEach(k => typical[k] = (typical[k] || 0) + n * s[k]);
+    const walk = (i, w, c) => {
+      if (!w) return;
+      if (i === ks.length) {
+        const l = w * c.reduce((a, x, j) => a * choose(x, seen[j]), 1) * choose(n - c.reduce((a, x) => a + x, 0), base) / choose(n, o);
+        like += l;
+        c.forEach((x, j) => rest[j] += l * (x - seen[j]));
+        return;
+      }
+      const mu = n * s[ks[i]], lo = Math.floor(mu);
+      walk(i + 1, w * (1 - (mu - lo)), [...c, lo]);
+      walk(i + 1, w * (mu - lo), [...c, lo + 1]);
+    };
+    walk(0, 1, []);
+    logEven += Math.log(like);
+    logRand += logFact(o) - logFact(base) + base * Math.log(1 - ks.reduce((a, k) => a + s[k], 0))
+      + ks.reduce((a, k, j) => a - logFact(seen[j]) + seen[j] * Math.log(s[k]), 0);
+    return {ks, rest: rest.map(r => like ? r / like : 0)};
+  });
+  const possible = logEven > -Infinity;
+  const even = possible ? COLLATION / (COLLATION + (1 - COLLATION) * Math.exp(logRand - logEven)) : 0;
+  const branch = e => {
+    let gross = 0, buy = 0;
+    const add = (k, w) => { const [mg, mb] = rarMean(p, k); gross += w * mg; buy += w * mb; };
+    SLOTS[p.g].forEach((s, slot) => {
+      if (typeof s !== 'object') return add(s, 1);
+      const {ks, rest} = slots[slot], q = ks.map((k, j) => left ? e * rest[j] / left + (1 - e) * s[k] : 0);
+      ks.forEach((k, j) => add(k, q[j]));
+      add(Object.keys(s)[0], 1 - q.reduce((a, b) => a + b, 0));
+    });
+    return [gross, buy];
+  };
+  const [g1, b1] = possible ? branch(1) : [0, 0], [g0, b0] = branch(0);
+  const gross = even * g1 + (1 - even) * g0, buy = even * b1 + (1 - even) * b0, guard = Math.max(b0, b1);
+  const price = Math.max(p.price, Math.ceil(guard / MAX_BUY / 10) * 10);
+  return {left, pulled, typical, even, gross, buy, guard, price, raised: price > p.price, grossPct: gross / price, buyPct: buy / price, guardPct: guard / price};
+}
+const priceOf = p => boxEst(p).price;
+const pct = x => Math.round(x * 100) + '%';
+
+function initial() {
+  const t = now(), d = 864e5;
+  const opens = [['me2', 4], ['sv10', 22], ['me1', 7], ['op12', 15], ['sv9', 6], ['op11', 5], ['me2', 8], ['op10', 7], ['sv10', 9], ['op13', 1], ['me1', 13]];
+  const openedAt = (pid, pos) => t - d * (36 - opens.findIndex(([q, n]) => q === pid && n === pos));
+  const card = (id, pid, rar, val, num, pos, st) => ({id, pid, rar, val, num, pos, src: 'pack', st: st || 'vault', at: openedAt(pid, pos)});
+  const sealed = [['p4', 'op13', 9, 2], ['p3', 'op11', 10, 4], ['p2', 'sv10', 16, 6], ['p1', 'me2', 12, 9]].map(([id, pid, pos, ago]) => ({id, pid, pos, paid: P(pid).price, at: t - d * ago}));
+  const taken = {};
+  [...opens, ...sealed.map(x => [x.pid, x.pos])].forEach(([pid, pos]) => (taken[pid] = taken[pid] || []).push(pos));
+  return {
+    seq: 20,
+    tops: [{at: t - d * 45, eur: 20000, left: 9700}, {at: t - d * 38, eur: 10000, left: 10000}],
+    buyback: 2100, bonus: 1100,
+    cards: [
+      card('c1', 'me2', 'UR', 960, 203, 4), card('c2', 'sv10', 'IR', 1240, 197, 22), card('c3', 'me1', 'RR', 180, 96, 7),
+      card('c4', 'op12', 'SR', 220, 41, 15), card('c5', 'sv9', 'SIR', 4200, 214, 6), card('c6', 'op11', 'AA', 2650, 77, 5),
+      card('c7', 'me2', 'IR', 1480, 221, 8), card('c8', 'op10', 'SR', 140, 33, 7), card('c9', 'sv10', 'RR', 260, 112, 9),
+      card('c10', 'op13', 'SR', 310, 58, 1), card('c11', 'me1', 'UR', 1120, 230, 13), card('c12', 'sv9', 'R', 45, 140, 6),
+      card('c13', 'me1', 'IR', 890, 201, 7, 'shipped'), card('c14', 'me2', 'RR', 210, 112, 8, 'shipped')
+    ].sort((x, y) => y.at - x.at),
+    sealed,
+    ships: [{id: 'SH-1001', z: 'FI', n: 2, value: 1100, cost: 590, at: t - d * 12, trk: 'DEMO418230917'}],
+    hist: [
+      ...sealed.map(x => ({at: x.at, t: P(x.pid).set + ' pack ' + x.pos + ', kept sealed', d: -x.paid})),
+      {at: t - d * 12, t: 'Shipment SH-1001 to Finland', d: -590},
+      {at: t - d * 20, t: 'Sold 6 cards back', d: 2100},
+      ...opens.map(([pid, pos]) => ({at: openedAt(pid, pos), t: P(pid).set + ' pack ' + pos + ', opened on camera', d: -P(pid).price})).reverse(),
+      {at: t - d * 38, t: 'Top-up of €100.00 in demo mode', d: 10300},
+      {at: t - d * 45, t: 'Top-up of €200.00 in demo mode', d: 20800}
+    ],
+    taken,
+    limit: {amt: null, pend: null},
+    brk: null, slabs: []
+  };
+}
+let S = initial();
+const bought = () => S.tops.reduce((a, x) => a + x.left, 0);
+const bal = () => bought() + S.buyback + S.bonus;
+function spend(n) {
+  if (n > bal()) return false;
+  for (const x of S.tops) { const k = Math.min(x.left, n); x.left -= k; n -= k; }
+  const k = Math.min(S.buyback, n); S.buyback -= k; n -= k;
+  S.bonus -= n;
+  return true;
+}
+const uid = p => p + (++S.seq).toString(36) + Math.floor(Math.random() * 1e6).toString(36);
+function hist(t, d) { S.hist.unshift({at: now(), t, d}); S.hist = S.hist.slice(0, 80); }
+function opened(p) { return new Set([...baseOpened(p), ...(S.taken[p.id] || [])]); }
+const onBreak = () => !!(S.brk && now() < S.brk);
+function effLimit() {
+  const L = S.limit;
+  if (L.pend && now() >= L.pend.at) { L.amt = L.pend.amt; L.pend = null; }
+  return L.amt;
+}
+function monthSpent() {
+  const d = new Date(), m = d.getMonth(), y = d.getFullYear();
+  return S.tops.filter(x => { const a = new Date(x.at); return a.getMonth() === m && a.getFullYear() === y; }).reduce((a, x) => a + x.eur, 0);
+}
+
+/* pieces */
+function packArt(p, cls) {
+  const g = GAMES[p.g];
+  return `<span class="pack ${cls || ''}" style="--h:${p.hue}" aria-hidden="true"><span class="shine"></span><span class="pack-g">${g.name}</span><span class="pack-c">${p.code}</span><span class="pack-n">${g.cards} cards</span></span>`;
+}
+function tcard(c, o) {
+  o = o || {};
+  const p = P(c.pid), hit = HIT.has(c.rar);
+  return `<span class="tc${hit ? ' hit' : ''}${o.flip ? ' flip' : ''}${o.big ? ' big' : ''}" style="--h:${p.hue}"><span class="tc-top"><b>${c.rar}</b><span>${p.code}</span></span><span class="win"><em>${rarName(p.g, c.rar)}</em></span><span class="tc-bot"><span class="mono">${cardNo(p, c.num)}</span><b>${eur(c.val)}</b></span></span>`;
+}
+function slab(s) {
+  return `<span class="slab"><span class="slab-l"><span><b>${s.grader}</b><span class="mono">${s.cert}</span></span><span class="slab-g">${s.grade}</span></span>${tcard({pid: s.pid, rar: s.rar, num: s.num, val: s.price != null ? s.price : s.val})}</span>`;
+}
+function prodTile(p, hot) {
+  const g = GAMES[p.g], e = boxEst(p), left = e.left;
+  return `<a class="prod card" href="#rip/${p.id}"><span class="prod-art" style="--h:${p.hue}">${packArt(p)}</span><span class="prod-b"><span class="prod-t">${p.set}</span><span class="mono small muted">${g.name} · ${p.code}</span><span class="prod-p"><b>${eur(e.price)}</b><span class="muted">${fmtR(e.price)} Rips</span></span><span class="est" aria-label="Estimates for one pack, as a share of its price"><span><b>${pct(e.grossPct)}</b>card value</span><span><b>${pct(e.buyPct)}</b>buyback value</span></span><span class="left"><span class="barx"><i style="width:${left / g.packs * 100}%"></i></span><span class="small muted">${left} of ${g.packs} packs left in box ${p.box}</span></span></span><span class="btn btn-s sm wide">Pick a pack</span>${hot ? '<span class="badge hot">Hot</span>' : p.isNew ? '<span class="badge">New box</span>' : ''}</a>`;
+}
+function slabTile(s) {
+  const p = P(s.pid);
+  return `<div class="card slabt">${slab(s)}<div class="slab-b"><b>${p.set}</b><span class="small muted">${rarName(p.g, s.rar)} · ${cardNo(p, s.num)}</span><span class="prod-p"><b>${eur(s.price)}</b><span class="muted">${fmtR(s.price)} Rips</span></span><button class="btn btn-p sm wide" data-act="buy" data-id="${s.id}">Buy this slab</button></div></div>`;
+}
+function buybackTable() {
+  return `<table class="tbl"><thead><tr><th>Market price of the card</th><th class="n">We pay in Rips</th></tr></thead><tbody>
+  <tr><td>Under €1</td><td class="n">60%</td></tr><tr><td>€1 to €25</td><td class="n">80%</td></tr><tr><td>Over €25</td><td class="n">85%</td></tr></tbody></table>`;
+}
+function shipTable() {
+  return `<table class="tbl"><thead><tr><th>Destination</th><th class="n">Postage</th><th class="n">Working days</th></tr></thead><tbody>${Object.values(ZONES).map(z => `<tr><td>${z[0]}</td><td class="n">${eur(z[1])}</td><td class="n">${z[2]}</td></tr>`).join('')}</tbody></table>`;
+}
+
+/* views */
+const PULLS = [
+  {pid: 'sv10', rar: 'SIR', num: 232, val: 14800, pos: 14},
+  {pid: 'op13', rar: 'SEC', num: 120, val: 9900, pos: 3},
+  {pid: 'op11', rar: 'AA', num: 119, val: 6200, pos: 22},
+  {pid: 'me2', rar: 'HR', num: 212, val: 4100, pos: 30},
+  {pid: 'me1', rar: 'IR', num: 184, val: 1650, pos: 8},
+  {pid: 'op12', rar: 'SR', num: 44, val: 560, pos: 17}
+];
+function home() {
+  const hot = PRODUCTS.map(p => [p, boxEst(p)]).filter(([, e]) => e.left > 0).sort((a, b) => b[1].grossPct - a[1].grossPct).slice(0, 4).map(([p]) => p);
+  const slabs = SLABS.filter(s => !S.slabs.includes(s.id)).slice(0, 4);
+  const mine = S.cards.filter(c => c.src === 'pack' && HIT.has(c.rar)).sort((a, b) => b.at - a.at).slice(0, 2);
+  const pulls = [...mine, ...PULLS].slice(0, 6);
+  const fan = ['me2', 'sv10', 'op13'].map(id => packArt(P(id))).join('');
+  return `
+  <section class="hero">
+    <div>
+      <p class="kick">Real sealed packs, opened on camera</p>
+      <h1 class="h1">Rip real packs. <span class="dim">We open them on camera for you.</span></h1>
+      <p class="lede">Pick a numbered pack from a sealed box. We film it from the seal to the last card. Then keep the cards, ship them home, or sell them back for Rips.</p>
+      <div class="row"><a class="btn btn-p" href="#packs">Pick a pack</a><a class="btn btn-s" href="#how">How it works</a></div>
+      <p class="fine">18+ only. No software decides what is in a pack.</p>
+    </div>
+    <div class="fan" aria-hidden="true">${fan}<span class="live"><i></i>Live on table 2 <span id="tc">00:00:00</span></span></div>
+  </section>
+  <section class="heronotes">
+    <div><b>Sealed on arrival</b><span>We film every box as it arrives.</span></div>
+    <div><b>Up to 85% back</b><span>Sell cards back for Rips in one tap.</span></div>
+    <div><b>Tracked to your door</b><span>Finland from ${eur(ZONES.FI[1])}, Sweden from ${eur(ZONES.SE[1])}.</span></div>
+  </section>
+  <section class="sec">
+    <div class="sech"><div><p class="kick">Hot packs</p><h2 class="h2">The most still to find. <span class="dim">Right now.</span></h2></div><a class="more" href="#packs">All ${PRODUCTS.length} boxes →</a></div>
+    <div class="grid4">${hot.map(p => prodTile(p, true)).join('')}</div>
+    <p class="fine">We rank boxes by the estimated market value of one pack's cards, as a share of its price. These are estimates, not promises, and any pack can hold none of the big cards. <a href="#how/faq">How we work this out</a></p>
+  </section>
+  <section class="sec center">
+    <p class="kick">Recent pulls</p>
+    <h2 class="h2">Fresh off the table</h2>
+    <div class="pulls">${pulls.map(c => { const p = P(c.pid); return `<figure>${tcard(c)}<figcaption><b>${rarName(p.g, c.rar)}</b><span>${p.code} · pack ${c.pos}</span></figcaption></figure>`; }).join('')}</div>
+  </section>
+  <section class="sec">
+    <div class="sech"><div><p class="kick">How it works</p><h2 class="h2">Three steps. <span class="dim">One take.</span></h2></div><a class="more" href="#how">Chain of custody →</a></div>
+    <ol class="steps3">
+      <li class="card"><b>Pick a pack</b><p>Choose a set and a pack number from the box grid. The price is fixed before you pay.</p></li>
+      <li class="card"><b>Watch it opened</b><p>We film your pack from the seal to the last card, with no cuts.</p></li>
+      <li class="card"><b>Keep, ship, or sell back</b><p>Keep cards in your vault, post them home tracked, or sell them back for Rips.</p></li>
+    </ol>
+  </section>
+  <section class="sec">
+    <div class="sech"><div><p class="kick">Graded shop</p><h2 class="h2">Slabs from our own vault</h2></div><a class="more" href="#shop">Open the shop →</a></div>
+    <div class="grid4">${slabs.map(slabTile).join('')}</div>
+  </section>
+  <div class="slim"><span><b>Your limits.</b> A lower top-up limit starts at once. A higher one waits 24 hours.</span><a class="more" href="#wallet">Set a limit →</a></div>`;
+}
+function pullTable(g) {
+  const acc = {};
+  SLOTS[g].forEach(s => { if (typeof s === 'object') for (const k in s) acc[k] = (acc[k] || 0) + s[k]; });
+  const rows = Object.entries(acc).filter(([k]) => HIT.has(k)).sort((a, b) => b[1] - a[1]);
+  return `<table class="tbl"><thead><tr><th>Rarity</th><th class="n">Recorded rate</th></tr></thead><tbody>${rows.map(([k, v]) => `<tr><td>${rarName(g, k)}</td><td class="n">about 1 in ${fmtR(1 / v)} packs</td></tr>`).join('')}</tbody></table>`;
+}
+function packs(arg) {
+  const f = arg === 'pk' || arg === 'op' ? arg : 'all';
+  const list = PRODUCTS.filter(p => f === 'all' || p.g === f);
+  const chip = (k, label, href) => `<a href="${href}"${f === k ? ' aria-current="page"' : ''}>${label}</a>`;
+  return `<section class="pagehead"><p class="kick">Packs</p><h1 class="h2">Pick a box, then pick your pack</h1><p class="lede">Every box was bought sealed and opened on camera. Each pack inside has a number, and opened numbers are greyed out.</p></section>
+  <div class="filters">${chip('all', 'All boxes', '#packs')}${chip('pk', 'Pokémon', '#packs/pk')}${chip('op', 'One Piece', '#packs/op')}</div>
+  <div class="grid4">${list.map(p => prodTile(p)).join('')}</div>
+  <p class="fine">Card value is the estimated market value of one pack's cards, as a share of its price. Buyback value is what we would pay for those cards in Rips. <a href="#how/faq">How we work this out</a></p>
+  <section class="sec two">
+    <div class="card pad"><h2 class="h3">Pokémon pull rates</h2><p class="muted small">What we recorded across opened boxes. These are estimates from our records, not promises. Any pack can have none of these.</p>${pullTable('pk')}</div>
+    <div class="card pad"><h2 class="h3">One Piece pull rates</h2><p class="muted small">What we recorded across opened boxes. These are estimates from our records, not promises. Any pack can have none of these.</p>${pullTable('op')}</div>
+  </section>
+  <p class="fine">Sample figures for this demo. The live service publishes the count of packs behind each rate.</p>`;
+}
+
+/* rip flow */
+let R = null;
+const freshRip = pid => ({pid, pos: null, mode: 'open', ok: false, stage: 'pick', cards: [], shown: 0, sel: new Set()});
+function rip(pid) {
+  const p = P(pid);
+  if (!p) return `<div class="empty"><b>We couldn't find that box</b><a class="btn btn-s" href="#packs">See all packs</a></div>`;
+  if (!R || R.pid !== pid) R = freshRip(pid);
+  switch (R.stage) {
+    case 'queue': return ripQueue(p);
+    case 'film': return ripFilm(p);
+    case 'reveal': return ripReveal(p);
+    case 'done': return ripDone(p);
+    case 'sealed': return ripSealed(p);
+    default: return ripPick(p);
+  }
+}
+function tracker(p, e) {
+  const g = GAMES[p.g];
+  const typ = n => n >= 1 ? n.toFixed(1) : '1 in ' + Math.round(1 / n) + ' boxes';
+  const rows = Object.keys(e.typical).sort((a, b) => e.typical[b] - e.typical[a]).map(k => `<tr><td>${rarName(p.g, k)}</td><td class="n">${e.pulled[k] || 0}</td><td class="n">${typ(e.typical[k])}</td></tr>`).join('');
+  return `<div class="card pad trk">
+      <div class="trk-h"><div><p class="kick">Box tracker</p><h2 class="h3">What is left in box ${p.box}</h2></div><span class="tag warn">Estimate</span></div>
+      <div class="vstats"><span><b>${e.left} of ${g.packs}</b>packs left</span><span><b>${pct(e.grossPct)}</b>card value per pack</span><span><b>${pct(e.buyPct)}</b>buyback value per pack</span></div>
+      <table class="tbl"><thead><tr><th>Rarity</th><th class="n">Pulled so far</th><th class="n">In a typical box</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="fine">Card value is the estimated market value of one pack's cards from this box, as a share of its price. It rises when this box has given fewer big cards than a typical box. Buyback value is what we would pay for those cards in Rips.${e.raised ? ' The price is set for the packs left in this box, so the buyback value stays under 95% of it.' : ''} <a href="#how/faq">How we work this out</a></p>
+    </div>`;
+}
+function ripPick(p) {
+  const g = GAMES[p.g], op = opened(p), e = boxEst(p), left = e.left, price = e.price;
+  if (R.pos && op.has(R.pos)) R.pos = null;
+  const cells = range(g.packs).map(i => op.has(i)
+    ? `<button class="slot gone" disabled aria-label="Pack ${i}, already opened">${i}</button>`
+    : `<button class="slot${R.pos === i ? ' on' : ''}" data-act="pos" data-pos="${i}" aria-pressed="${R.pos === i}" aria-label="Pack ${i}">${i}</button>`).join('');
+  const need = price - bal(), brk = onBreak();
+  const can = R.pos && (R.mode === 'seal' || R.ok) && need <= 0 && !brk;
+  return `<a class="back" href="#packs">All packs</a>
+  <div class="ripgrid">
+    <div class="ripcol"><div class="card pad">
+      <div class="phead">${packArt(p, 'sm')}<div><p class="kick">${g.name} · ${p.code}</p><h1 class="h2">${p.set}</h1><p class="mono small muted" style="margin:8px 0 0">Box ${p.box} · ${g.packs} packs of ${g.cards} cards</p></div></div>
+      <h2 class="h3">1. Pick your pack</h2>
+      <p class="muted" style="margin:0">Each number is one sealed pack, in the order it sat in the box. ${left} packs are left.</p>
+      <div class="slots" style="--h:${p.hue};--cols:${p.g === 'pk' ? 9 : 8}">${cells}</div>
+      <button class="btn btn-g sm" data-act="lucky">Pick a number for me</button>
+    </div>
+    ${tracker(p, e)}</div>
+    <div class="card pad">
+      <h2 class="h3">2. Choose what happens</h2>
+      <div class="choice">
+        <label class="opt${R.mode === 'open' ? ' on' : ''}"><input type="radio" name="mode" value="open" data-act="mode"${R.mode === 'open' ? ' checked' : ''}><b>Open it on camera</b><span>We film it in one take. The cards go to your vault.</span></label>
+        <label class="opt${R.mode === 'seal' ? ' on' : ''}"><input type="radio" name="mode" value="seal" data-act="mode"${R.mode === 'seal' ? ' checked' : ''}><b>Keep it sealed</b><span>The pack waits in your vault. Open it later or ship it home unopened.</span></label>
+      </div>
+      ${R.mode === 'open' ? `<label class="consent"><input type="checkbox" data-act="ok"${R.ok ? ' checked' : ''}><span>Open my pack straight away. Once it is opened I can't cancel or return it.</span></label>` : ''}
+      <div class="sum">
+        <div><span>Pack</span><b>${R.pos ? 'Number ' + R.pos : 'Not picked yet'}</b></div>
+        <div><span>${e.raised ? 'Price for the packs left' : 'Price'}</span><b>${eur(price)} or ${fmtR(price)} Rips</b></div>
+        <div class="tot"><span>Balance after</span><b>${fmtR(Math.max(0, bal() - price))} Rips</b></div>
+      </div>
+      ${need > 0 ? `<p class="warnbox">You need ${fmtR(need)} more Rips. <a href="#wallet">Get Rips</a></p>` : ''}
+      ${brk ? `<p class="warnbox">You are on a break until ${time(S.brk)}.</p>` : ''}
+      <button class="btn btn-p wide" data-act="pay"${can ? '' : ' disabled'}>Pay ${fmtR(price)} Rips</button>
+      <p class="fine">${!R.pos ? 'Pick a pack number to continue.' : R.mode === 'open' && !R.ok ? 'Tick the box to confirm the opening.' : 'Demo only. No money moves.'}</p>
+    </div>
+  </div>`;
+}
+function ripQueue(p) {
+  return `<div class="mat queue" style="--qms:${RM ? '.6s' : '2.2s'}">
+    <div class="mat-top"><span class="rec"><i></i>Live</span><span>Table 2</span><span class="mono">${p.box}</span></div>
+    <div class="qbody"><p class="kick">Pack ${R.pos} · ${p.set}</p><h1 class="h2 light">Your pack is going to the table</h1>
+      <div class="prog"><i></i></div>
+      <ol class="qsteps"><li>Lifted from slot ${R.pos} in box ${p.box}</li><li>Seal checked on camera</li><li>Recording film ${vid(p, R.pos)}</li></ol>
+    </div>
+  </div>`;
+}
+function ripFilm(p) {
+  return `<div class="mat film">
+    <div class="mat-top"><span class="rec"><i></i>Rec</span><span>Table 2</span><span id="tc" class="mono">00:00:00:00</span></div>
+    <div class="stagebox">
+      <div class="fcards">${[0, 1, 2].map(i => `<span class="tc back" style="--i:${i}"><span class="bk">R4U</span></span>`).join('')}</div>
+      <div class="fpack" style="--h:${p.hue}"><span class="fstrip"></span><span class="pack-g">${GAMES[p.g].name}</span><span class="pack-c">${p.code}</span><span class="pack-n">Pack ${R.pos}</span></div>
+    </div>
+    <div class="mat-foot">
+      <div><div class="mat-k">Film</div><div class="mat-v mono">${vid(p, R.pos)}</div></div>
+      <div><div class="mat-k">Box</div><div class="mat-v mono">${p.box}</div></div>
+      <div><div class="mat-k">Take</div><div class="mat-v">One take, no cuts</div></div>
+    </div>
+  </div>`;
+}
+function ripReveal(p) {
+  const n = R.cards.length, k = R.shown, last = k === n - 1;
+  return `<div class="revhead"><p class="kick">Pack ${R.pos} · ${p.set}</p><h1 class="h2">${last ? 'Last card' : `Card ${k + 1} of ${n}`}</h1><p class="muted">${last ? 'The last card is the rare slot.' : 'Tap the pack to turn over the next card.'}</p></div>
+  <div class="revgrid">
+    <button class="deck" data-act="next" aria-label="Turn over card ${k + 1} of ${n}"><span class="tc back"><span class="bk">R4U</span></span><span class="deckn mono">${plural(n - k, 'card')} left</span></button>
+    <div class="revealed" aria-live="polite">${R.cards.slice(0, k).map((c, i) => tcard(c, {flip: i === k - 1})).join('')}</div>
+  </div>
+  <div class="row" style="margin-bottom:36px"><button class="btn btn-p" data-act="next">${last ? 'Turn over the last card' : 'Next card'}</button><button class="btn btn-g" data-act="all">Show all</button></div>`;
+}
+function ripDone(p) {
+  const cs = R.cards.map(rc => S.cards.find(c => c.id === rc.id) || rc);
+  const total = cs.reduce((a, c) => a + c.val, 0);
+  const best = cs.reduce((a, c) => c.val > a.val ? c : a, cs[0]);
+  const sel = cs.filter(c => R.sel.has(c.id) && c.st === 'vault');
+  const tot = sel.reduce((a, c) => a + offer(c.val), 0);
+  const big = R.justDone; R.justDone = false;
+  const tiles = cs.map((c, i) => {
+    const sold = c.st !== 'vault', on = R.sel.has(c.id) && !sold;
+    return `<button class="vt${on ? ' on' : ''}${sold ? ' sold' : ''}" data-act="rsel" data-id="${c.id}" aria-pressed="${on}"${sold ? ' disabled' : ''}>${tcard(c, {big: big && i === cs.length - 1})}<span class="vt-m"><b>${rarName(p.g, c.rar)}</b><span>${sold ? 'Sold back' : 'Sell for ' + fmtR(offer(c.val)) + ' Rips'}</span></span><i class="tick" aria-hidden="true"></i></button>`;
+  }).join('');
+  return `<div class="card pad" style="margin-top:24px">
+    <p class="kick">Pack ${R.pos} opened</p>
+    <h1 class="h2">Your ${cs.length} cards are in your vault</h1>
+    <div class="vstats"><div><b>${eur(total)}</b>market value today</div><div><b>${rarName(p.g, best.rar)}</b>best card, ${eur(best.val)}</div><div><b class="mono" style="font-size:15px">${vid(p, R.pos)}</b>film saved on this order</div></div>
+  </div>
+  <div class="sech" style="margin-top:26px"><div><h2 class="h3">Sell any of them back</h2><p class="muted" style="margin:0">Tap cards to select them. Cards you keep stay in your vault.</p></div></div>
+  <div class="vgrid">${tiles}</div>
+  <div class="abar card">
+    <div class="abar-t"><b>${plural(sel.length, 'card')} selected</b><span class="muted small">${sel.length ? 'Sells for ' + fmtR(tot) + ' Rips' : 'Nothing selected'}</span></div>
+    <div class="row"><button class="btn btn-p" data-act="rsell"${sel.length ? '' : ' disabled'}>Sell for ${fmtR(tot)} Rips</button><a class="btn btn-s" href="#vault">Go to vault</a><button class="btn btn-g" data-act="again">Open another</button></div>
+  </div>`;
+}
+function ripSealed(p) {
+  const still = S.sealed.some(s => s.id === R.sealedId);
+  return `<div class="card pad center" style="max-width:560px;margin:30px auto 40px">${packArt(p, 'md')}<p class="kick">Kept sealed</p><h1 class="h2">Pack ${R.pos} is in your vault</h1><p class="muted">It stays sealed in its numbered slot. Open it on camera whenever you like, or ship it home unopened.</p><div class="row center">${still ? `<button class="btn btn-p" data-act="vopen" data-id="${R.sealedId}">Open it now</button>` : ''}<a class="btn btn-s" href="#vault/sealed">Go to vault</a><button class="btn btn-g" data-act="again">Pick another</button></div></div>`;
+}
+
+/* vault */
+const V = {sel: new Set(), tab: 'cards'};
+function vault(arg) {
+  const tab = ['cards', 'sealed', 'ships'].includes(arg) ? arg : 'cards';
+  if (V.tab !== tab) { V.sel.clear(); V.tab = tab; }
+  const cards = S.cards.filter(c => c.st === 'vault' || c.st === 'grading');
+  const value = cards.reduce((a, c) => a + c.val, 0);
+  const t = (k, label, n) => `<a href="#vault/${k}"${tab === k ? ' aria-current="page"' : ''}>${label} <span class="tag">${n}</span></a>`;
+  let body = '';
+  if (tab === 'cards') {
+    body = cards.length ? `<div class="vgrid">${cards.map(c => {
+      const p = P(c.pid), on = V.sel.has(c.id), grading = c.st === 'grading';
+      const sub = c.src === 'shop' ? 'Graded shop' : 'Pack ' + c.pos + ' · ' + p.code;
+      return `<button class="vt${on ? ' on' : ''}" data-act="vsel" data-id="${c.id}" aria-pressed="${on}"${grading ? ' disabled' : ''}>${c.grade ? slab(c) : tcard(c)}<span class="vt-m"><b>${rarName(p.g, c.rar)}</b><span>${sub}</span><span>${eur(c.val)}</span>${grading ? '<span class="tag warn">At grading</span>' : ''}</span><i class="tick" aria-hidden="true"></i></button>`;
+    }).join('')}</div>` : `<div class="card empty"><b>No cards yet</b><p>Open a pack and the cards land here.</p><a class="btn btn-p" href="#packs">Pick a pack</a></div>`;
+  } else if (tab === 'sealed') {
+    body = S.sealed.length ? S.sealed.map(s => {
+      const p = P(s.pid), on = V.sel.has(s.id);
+      return `<div class="card srow">${packArt(p, 'xs')}<div class="srow-b"><b>${p.set}</b><span class="mono small muted">Pack ${s.pos} · box ${p.box}</span><span class="small muted">Kept sealed since ${day(s.at)}</span></div><div class="row"><button class="btn btn-p sm" data-act="vopen" data-id="${s.id}">Open on camera</button><button class="btn btn-s sm" data-act="vsel" data-id="${s.id}" aria-pressed="${on}">${on ? 'Selected to ship' : 'Select to ship'}</button></div></div>`;
+    }).join('') : `<div class="card empty"><b>No sealed packs</b><p>Choose "Keep it sealed" when you buy a pack and it waits here.</p></div>`;
+  } else {
+    body = S.ships.length ? `<div class="card pad"><table class="tbl"><thead><tr><th>Shipment</th><th>To</th><th class="n">Items</th><th class="n">Cost</th><th>Status</th></tr></thead><tbody>${S.ships.map(x => {
+      const age = now() - x.at, st = age < 864e5 ? 'Packing' : age < 864e5 * 3 ? 'On the way' : 'Delivered';
+      return `<tr><td><span class="mono">${x.id}</span><br><span class="small muted">${day(x.at)}</span></td><td>${ZONES[x.z][0]}</td><td class="n">${x.n}</td><td class="n">${x.cost ? fmtR(x.cost) + ' Rips' : 'Free'}</td><td><span class="tag${st === 'Delivered' ? ' good' : ''}">${st}</span><br><span class="mono small muted">${x.trk}</span></td></tr>`;
+    }).join('')}</tbody></table></div>` : `<div class="card empty"><b>No shipments yet</b><p>Select cards or sealed packs and choose "Ship home".</p></div>`;
+  }
+  return `<section class="pagehead"><p class="kick">Vault</p><h1 class="h2">Your vault</h1>
+    <div class="vstats"><div><b>${cards.length}</b>cards</div><div><b>${eur(value)}</b>market value</div><div><b>${S.sealed.length}</b>sealed packs</div></div>
+    <p class="muted" style="margin:6px 0 0">Every card sits in a sleeve and a numbered slot in our [WAREHOUSE_CITY] vault.</p></section>
+  <nav class="vtabs" aria-label="Vault sections">${t('cards', 'Cards', cards.length)}${t('sealed', 'Sealed packs', S.sealed.length)}${t('ships', 'Shipments', S.ships.length)}</nav>
+  ${body}${vaultBar(tab)}`;
+}
+function vaultBar(tab) {
+  if (!V.sel.size || tab === 'ships') return '';
+  if (tab === 'sealed') {
+    return `<div class="abar card"><div class="abar-t"><b>${plural(V.sel.size, 'pack')} selected</b><span class="muted small">They ship sealed</span></div><div class="row"><button class="btn btn-p" data-act="vship">Ship home</button><button class="btn btn-g" data-act="vclear">Clear</button></div></div>`;
+  }
+  const sel = [...V.sel].map(id => S.cards.find(c => c.id === id)).filter(Boolean);
+  const shop = sel.some(c => c.src === 'shop'), graded = sel.some(c => c.grade);
+  const val = sel.reduce((a, c) => a + c.val, 0), buy = sel.reduce((a, c) => a + offer(c.val), 0);
+  return `<div class="abar card"><div class="abar-t"><b>${plural(sel.length, 'card')} selected</b><span class="muted small">Worth ${eur(val)}</span></div>
+  <div class="row"><button class="btn btn-p" data-act="vsell"${shop ? ' disabled' : ''}>Sell back for ${fmtR(buy)} Rips</button><button class="btn btn-s" data-act="vship">Ship home</button><button class="btn btn-s" data-act="vgrade"${graded ? ' disabled' : ''}>Send to grading</button><button class="btn btn-g" data-act="vclear">Clear</button></div>
+  ${shop ? '<p class="fine">Cards bought in the graded shop can\'t be sold back.</p>' : graded ? '<p class="fine">Graded cards can\'t go to grading again.</p>' : ''}</div>`;
+}
+
+/* shop */
+function shop() {
+  const avail = SLABS.filter(s => !S.slabs.includes(s.id));
+  return `<section class="pagehead"><p class="kick">Graded shop</p><h1 class="h2">Graded cards from our own vault</h1><p class="lede">We own every slab here. Each one sits in our [WAREHOUSE_CITY] vault, and each cert number checks out on the grader's own site.</p></section>
+  ${avail.length ? `<div class="grid4">${avail.map(slabTile).join('')}</div>` : '<div class="card empty"><b>The demo shop is sold out</b><p>Reset the demo to restock it.</p></div>'}
+  <p class="fine">A slab you buy goes to your vault. Ship it from there whenever you like. Shop prices include VAT where it applies.</p>`;
+}
+
+/* rips */
+function wallet() {
+  const lim = effLimit(), spent = monthSpent(), pend = S.limit.pend, brk = onBreak();
+  return `<section class="pagehead"><p class="kick">Rips</p><h1 class="h2">Rips and limits</h1></section>
+  <div class="cgrid">
+    <div class="card pad"><span class="muted">Your balance</span><div class="big"><i class="token lg"></i>${fmtR(bal())}</div><div class="sum" id="kinds"><div><span>Bought Rips</span><b>${fmtR(bought())}</b></div><div><span>Buyback Rips</span><b>${fmtR(S.buyback)}</b></div><div><span>Bonus Rips</span><b>${fmtR(S.bonus)}</b></div></div><p class="muted">100 Rips are €1. Rips pay for packs, graded cards, postage, and grading.</p><p class="muted">We spend bought Rips first, starting with your oldest top-up. Then we spend buyback Rips, and bonus Rips last.</p><p class="muted">If you closed your account today, we would refund <b>${eur(bought())}</b>. Buyback and bonus Rips are never paid out.</p><span class="chip">18+ verified (demo)</span></div>
+    <div class="card pad"><h2 class="h3">Top up</h2>
+      <div class="bundles">${BUNDLES.map(b => `<button class="bundle" data-act="top" data-eur="${b.eur}"${brk ? ' disabled' : ''}><b>${eur(b.eur)}</b><span>${fmtR(b.eur + b.extra)} Rips</span>${b.pct ? `<i>+${b.pct}%</i>` : ''}</button>`).join('')}</div>
+      <p class="fine">Demo mode. A bundle adds Rips without taking any payment. Its bonus Rips are spent last.</p>
+    </div>
+  </div>
+  <div class="cgrid">
+    <div class="card pad">
+      <h2 class="h3">Monthly top-up limit</h2>
+      <p>${lim == null ? 'You have no limit set.' : `Your limit is <b>${eur(lim)}</b> a month. You have topped up ${eur(spent)} this month.`}</p>
+      ${lim != null ? `<div class="meter"><i style="width:${lim ? Math.min(100, spent / lim * 100) : 100}%"></i></div>` : ''}
+      ${pend ? `<p class="warnbox">${pend.amt == null ? 'Your limit will be removed' : 'Your limit goes up to ' + eur(pend.amt)} on ${time(pend.at)}.</p>` : ''}
+      <div class="limrow"><label class="fld"><span>New limit in euros</span><input id="limv" inputmode="decimal" autocomplete="off" placeholder="100"></label><button class="btn btn-s" data-act="limset">Set limit</button>${lim != null ? '<button class="btn btn-g" data-act="limoff">Remove limit</button>' : ''}</div>
+      <p class="fine">A lower limit starts at once. A higher limit, or no limit, starts after 24 hours.</p>
+    </div>
+    <div class="card pad">
+      <h2 class="h3">Take a break</h2>
+      <p class="muted">Pause top-ups, packs, and the shop for 24 hours. You can still ship what you own. For a longer break, write to [SUPPORT_EMAIL] and we close your account for as long as you choose.</p>
+      <button class="btn btn-s" data-act="brk"${brk ? ' disabled' : ''}>${brk ? 'On a break until ' + time(S.brk) : 'Take a 24-hour break'}</button>
+    </div>
+  </div>
+  <div class="card pad" style="margin-bottom:20px"><h2 class="h3">History</h2><table class="hl"><tbody>${S.hist.slice(0, 25).map(h => `<tr><td class="small muted" style="white-space:nowrap">${time(h.at)}</td><td>${h.t}</td><td class="n ${h.d > 0 ? 'plus' : ''}">${h.d ? (h.d > 0 ? '+' : '−') + fmtR(Math.abs(h.d)) : ''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+/* how */
+const RECORD = `box B-2611-0051
+product ME2 booster display, 36 packs
+supplier [DISTRIBUTOR]
+received 2026-11-12 09:41 UTC
+wrap intact, weight 1.142 kg
+film V-2611-0051-00
+packs numbered 1 to 36 on camera`;
+let PUB = null;
+async function sha(t) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+function how() {
+  return `<section class="pagehead"><p class="kick">How it works</p><h1 class="h2">From a sealed box to your door</h1><p class="lede">Every pack on Rips4u is a real pack. This page shows each step it takes, and how you can check our records yourself.</p></section>
+  <section class="two" style="align-items:start">
+    <div class="card pad"><h2 class="h3" style="margin-bottom:18px">The chain of custody</h2><ol class="chain">
+      <li><div><b>A sealed box arrives</b><p>We buy sealed boxes from [DISTRIBUTOR]. Staff film each box as it arrives and log its wrap and weight.</p></div></li>
+      <li><div><b>We number every pack</b><p>On camera, we cut the wrap and number each pack in the order it sits. The box record goes online before we sell a single pack.</p></div></li>
+      <li><div><b>You pick a number</b><p>You choose a pack from the box grid. The price is fixed before you pay.</p></div></li>
+      <li><div><b>One take on camera</b><p>The pack goes to the table. We film it from the seal to the last card with no cuts, and the film stays on your order.</p></div></li>
+      <li><div><b>Every card is scanned</b><p>Staff scan each card as it comes out. The scan must match the film before the cards reach your vault.</p></div></li>
+      <li><div><b>Your vault slot</b><p>Cards go into a sleeve and a numbered slot in our [WAREHOUSE_CITY] vault. They are yours.</p></div></li>
+      <li><div><b>Your call</b><p>Keep them, sell them back for Rips, send them to grading, or ship them home.</p></div></li>
+    </ol></div>
+    <div class="card pad fp"><h2 class="h3">Check a box record</h2><p class="muted">We publish a SHA-256 fingerprint of each box record before the first pack is sold. If anyone edits the record later, the fingerprint stops matching.</p>
+      <span class="small muted">Published fingerprint</span><span class="fpv" id="pub">Working it out</span>
+      <label class="fld" for="rec"><span>Box record</span></label>
+      <textarea id="rec" spellcheck="false" aria-describedby="fptip">${RECORD}</textarea>
+      <p class="fine" id="fptip">Change one character, then check it again.</p>
+      <div class="row" style="margin-top:12px"><button class="btn btn-p" data-act="check">Check this record</button><button class="btn btn-g" data-act="restore">Restore the record</button></div>
+      <div id="fpres" aria-live="polite"></div>
+    </div>
+  </section>
+  <section class="sec two">
+    <div class="card pad"><h2 class="h3">What we pay when you sell back</h2>${buybackTable()}<p class="fine">We set market prices from [PRICE_SOURCE] once a day. Selling back is for cards from packs you opened here, and it pays in Rips only.</p></div>
+    <div class="card pad"><h2 class="h3">Shipping prices</h2>${shipTable()}<p class="fine">One postage price covers up to ${PER_PARCEL} cards. Insurance is 1.5% of the value for a shipment worth over €100. Sample prices for this demo.</p></div>
+  </section>
+  <section class="sec faq" id="faq"><h2 class="h2" style="margin-bottom:12px">Questions</h2>
+    <details open><summary>Are the packs real?</summary><p>Yes. Every pack is a physical pack from a box we bought sealed. No software decides what is in it. The cards were sealed in the pack at the factory.</p></details>
+    <details><summary>Can I watch my pack being opened?</summary><p>Yes. You can watch it as it happens, and the film stays on your order page. If any moment of the film is missing, write to us and we review the pack.</p></details>
+    <details><summary>Do you promise a hit every so many packs?</summary><p>No. Packs leave the factory as they are, and we can't change what is inside. The pull rates on the Packs page are records from boxes we opened. They are estimates, not promises.</p></details>
+    <details><summary>What happens to a card I sell back?</summary><p>It becomes ours. We may grade it, sell it in our shop, or sell it elsewhere.</p></details>
+    <details><summary>Can I turn Rips into money?</summary><p>Rips pay for packs, graded cards, postage, and grading. You can cancel an unspent top-up within 14 days. When you close your account, we refund the bought Rips you haven't spent. Bonus and buyback Rips are never paid out. We spend bought Rips first, so they run out before the other kinds.</p></details>
+    <details><summary>Can I cancel a pack?</summary><p>Yes, within 14 days of buying it, while it is still sealed in your vault. We return its Rips to your balance as the same kinds that paid for it. Once you ask us to open a pack and we do, you can't cancel or return it.</p></details>
+    <details><summary>How do you work out a pack's value?</summary><p>We start from the pull rates in our box records and the market prices from [PRICE_SOURCE]. Then we count the big cards already pulled from that box. If it has given fewer than a typical box, the estimate for each pack left can go up.</p><p>Boxes vary, and nothing in a box is guaranteed. Some boxes spread their big cards evenly and some don't. We start from a 65% chance that a box is even, and each pack opened updates that chance.</p><p>A very rare card may not be in a box at all. So the longer it fails to show, the less we count it. In this demo, the 65% is a sample figure.</p><p>Card value is the estimated market value of one pack's cards. Buyback value is what we would pay for them in Rips. To set prices, we treat a box as even unless the packs opened rule that out. If the buyback value would then pass 95% of the price, we set a higher price for the packs left in that box.</p></details>
+    <details><summary>Who can use Rips4u?</summary><p>Adults aged 18 or over who live in the EU and pass our age check.</p></details>
+  </section>`;
+}
+
+/* routing and rendering */
+const VIEWS = {home, packs, rip, vault, shop, wallet, how};
+let timers = [], lastV = null;
+const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+const every = (fn, ms) => timers.push(setInterval(fn, ms));
+function clearTimers() { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = []; }
+function route() {
+  const [v, arg] = (location.hash.slice(1) || 'home').split('/');
+  return VIEWS[v] ? {v, arg} : {v: 'home'};
+}
+function go(h) { if (location.hash === h) render(); else location.hash = h; }
+const MOUNT = {
+  home() {
+    let f = 0;
+    every(() => {
+      f++;
+      const tc = $('#tc');
+      if (tc) tc.textContent = [Math.floor(f / 3600), Math.floor(f / 60) % 60, f % 60].map(x => String(x).padStart(2, '0')).join(':');
+    }, 1000);
+  },
+  rip() {
+    if (!R) return;
+    if (R.stage === 'queue') later(() => { R.stage = 'film'; render(); }, RM ? 600 : 2200);
+    if (R.stage === 'film') {
+      const t0 = performance.now();
+      every(() => {
+        const ms = performance.now() - t0, s = Math.floor(ms / 1000), fr = Math.floor(ms / 40) % 25;
+        const tc = $('#tc');
+        if (tc) tc.textContent = '00:00:' + String(s).padStart(2, '0') + ':' + String(fr).padStart(2, '0');
+      }, 40);
+      later(startReveal, RM ? 600 : 2900);
+    }
+  },
+  how(arg) {
+    (async () => {
+      try { PUB = PUB || await sha(RECORD); const el = $('#pub'); if (el) el.textContent = PUB; }
+      catch (e) { const el = $('#pub'); if (el) el.textContent = 'This browser cannot work out fingerprints here.'; }
+    })();
+    if (arg === 'faq') { const f = $('#faq'); if (f) f.scrollIntoView(); }
+  }
+};
+function render() {
+  clearTimers();
+  const {v, arg} = route();
+  if (v === 'rip' && lastV !== 'rip' && R && (R.stage === 'done' || R.stage === 'sealed')) R = null;
+  const ae = document.activeElement;
+  let key = null;
+  if (ae && ae.dataset && ae.dataset.act && $('#view').contains(ae)) {
+    key = `[data-act="${ae.dataset.act}"]` + (ae.dataset.id ? `[data-id="${ae.dataset.id}"]` : '') + (ae.dataset.pos ? `[data-pos="${ae.dataset.pos}"]` : '') + (ae.type === 'radio' ? `[value="${ae.value}"]` : '');
+  }
+  $('#view').innerHTML = VIEWS[v](arg);
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    if (a.dataset.nav === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  $('#bal').textContent = fmtR(bal());
+  $('#brk').innerHTML = onBreak() ? `<div class="brk"><div class="wrap">You are on a break until ${time(S.brk)}. In this demo, reload the page to end it.</div></div>` : '';
+  if (MOUNT[v]) MOUNT[v](arg);
+  if (v !== lastV) window.scrollTo(0, 0);
+  lastV = v;
+  if (key && !dlg.open) { const el = $('#view ' + key); if (el) el.focus({preventScroll: true}); }
+}
+function startReveal() {
+  const p = P(R.pid);
+  R.cards = packCards(p, R.pos).map(c => ({...c, id: uid('c'), pos: R.pos, src: 'pack', st: 'vault', at: now()}));
+  R.cards.forEach(c => S.cards.unshift({...c}));
+  R.shown = 0; R.stage = 'reveal';
+  render(); window.scrollTo(0, 0);
+}
+function finishReveal() { R.shown = R.cards.length; R.stage = 'done'; R.sel = new Set(); R.justDone = true; render(); window.scrollTo(0, 0); }
+
+/* dialogs */
+const dlg = $('#dlg');
+function modal(html) { dlg.innerHTML = `<div class="dlg">${html}</div>`; if (!dlg.open) dlg.showModal(); }
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+const cancelBtn = '<button type="button" class="btn btn-g" data-act="close">Cancel</button>';
+let PEND = null, SHIPZ = 'FI', TOASTT = null;
+function toast(m) { const el = $('#toast'); el.textContent = m; el.classList.add('on'); clearTimeout(TOASTT); TOASTT = setTimeout(() => el.classList.remove('on'), 3400); }
+
+function sellDlg(ids, ctx) {
+  const cs = ids.map(id => S.cards.find(c => c.id === id)).filter(c => c && c.src === 'pack' && c.st === 'vault');
+  if (!cs.length) return;
+  const tot = cs.reduce((a, c) => a + offer(c.val), 0);
+  PEND = {ids: cs.map(c => c.id), ctx};
+  modal(`<h2 class="h3">Sell ${plural(cs.length, 'card')} back to us?</h2>
+  <p>You get <b>${fmtR(tot)} Rips</b> now. The cards become ours and leave your vault. You can't undo a sale.</p>
+  <div class="sum">${cs.slice(0, 6).map(c => `<div><span>${rarName(P(c.pid).g, c.rar)}, ${eur(c.val)}</span><b>${fmtR(offer(c.val))}</b></div>`).join('')}${cs.length > 6 ? `<div><span>And ${cs.length - 6} more</span><b></b></div>` : ''}<div class="tot"><span>Total</span><b>${fmtR(tot)} Rips</b></div></div>
+  <div class="row end">${cancelBtn}<button type="button" class="btn btn-p" data-act="sellgo">Sell for ${fmtR(tot)} Rips</button></div>`);
+}
+function shipItems() {
+  return [...V.sel].map(id => {
+    const c = S.cards.find(x => x.id === id && x.st === 'vault');
+    if (c) return {id, kind: 'card', v: c.val};
+    const s = S.sealed.find(x => x.id === id);
+    if (s) return {id, kind: 'pack', v: s.paid || P(s.pid).price};
+    return null;
+  }).filter(Boolean);
+}
+function shipCalc(items, z) {
+  const n = items.length, value = items.reduce((a, x) => a + x.v, 0);
+  const base = value >= FREE_FROM ? 0 : ZONES[z][1] * Math.ceil(n / PER_PARCEL);
+  const ins = value > INSURE_FROM ? Math.round(value * INSURE_RATE) : 0;
+  return {n, value, base, ins, total: base + ins};
+}
+function shipDlg() {
+  const items = shipItems();
+  if (!items.length) return;
+  const q = shipCalc(items, SHIPZ), short = q.total - bal();
+  modal(`<h2 class="h3">Ship ${plural(q.n, 'item')} home</h2>
+  <label class="fld"><span>Country</span><select data-act="zone">${Object.entries(ZONES).map(([k, z]) => `<option value="${k}"${k === SHIPZ ? ' selected' : ''}>${z[0]}</option>`).join('')}</select></label>
+  <div class="sum">
+    <div><span>Declared value</span><b>${eur(q.value)}</b></div>
+    <div><span>Tracked postage</span><b>${q.base ? eur(q.base) : 'Free'}</b></div>
+    <div><span>Insurance</span><b>${q.ins ? eur(q.ins) : 'Not needed'}</b></div>
+    <div class="tot"><span>Total</span><b>${fmtR(q.total)} Rips</b></div>
+  </div>
+  <p class="fine">Delivery takes ${ZONES[SHIPZ][2]} working days after we pack it. One postage price covers up to ${PER_PARCEL} items.</p>
+  ${short > 0 ? `<p class="warnbox">You need ${fmtR(short)} more Rips.</p>` : ''}
+  <div class="row end" style="margin-top:14px">${cancelBtn}<button type="button" class="btn btn-p" data-act="shipgo"${short > 0 ? ' disabled' : ''}>Confirm shipment</button></div>`);
+}
+function gradeDlg() {
+  const cs = [...V.sel].map(id => S.cards.find(c => c.id === id)).filter(c => c && c.st === 'vault' && !c.grade);
+  if (!cs.length) return;
+  const cost = cs.length * GRADE_COST, short = cost - bal();
+  modal(`<h2 class="h3">Send ${plural(cs.length, 'card')} to grading?</h2>
+  <p>We send them from our vault to [GRADER] and track them both ways. Grading takes about 12 weeks. We can't promise any grade.</p>
+  <div class="sum"><div><span>${plural(cs.length, 'card')} at ${fmtR(GRADE_COST)} Rips</span><b>${fmtR(cost)} Rips</b></div></div>
+  ${short > 0 ? `<p class="warnbox">You need ${fmtR(short)} more Rips.</p>` : ''}
+  <div class="row end">${cancelBtn}<button type="button" class="btn btn-p" data-act="gradego"${short > 0 ? ' disabled' : ''}>Send for ${fmtR(cost)} Rips</button></div>`);
+}
+function openDlg(id) {
+  const s = S.sealed.find(x => x.id === id);
+  if (!s) return;
+  if (onBreak()) { toast('You are on a break. Opening packs is paused.'); return; }
+  const p = P(s.pid);
+  modal(`<h2 class="h3">Open pack ${s.pos} on camera?</h2>
+  <p class="muted">${p.set}, box ${p.box}. We take it from its vault slot to Table 2 and film it in one take.</p>
+  <label class="consent"><input type="checkbox" data-act="okseal"><span>Open my pack straight away. Once it is opened I can't cancel or return it.</span></label>
+  <div class="row end" style="margin-top:16px">${cancelBtn}<button type="button" class="btn btn-p" id="opengo" data-act="opengo" data-id="${id}" disabled>Open it now</button></div>`);
+}
+function buyDlg(id) {
+  const s = SLABS.find(x => x.id === id);
+  if (!s || S.slabs.includes(id)) return;
+  const p = P(s.pid), brk = onBreak();
+  modal(`<h2 class="h3">${p.set}, ${rarName(p.g, s.rar)}</h2>
+  <p class="mono small muted">${s.grader} grade ${s.grade} · cert ${s.cert}</p>
+  <div class="sum"><div><span>Price</span><b>${eur(s.price)}</b></div><div><span>Delivery</span><b>To your vault</b></div></div>
+  <p class="muted small">Ship it from your vault whenever you like. Cards bought here can't be sold back.</p>
+  ${brk ? '<p class="warnbox">You are on a break. The shop is paused.</p>' : ''}
+  <div class="row end" style="margin-top:14px">${cancelBtn}<button type="button" class="btn btn-s" data-act="buyc" data-id="${id}"${bal() < s.price || brk ? ' disabled' : ''}>Pay ${fmtR(s.price)} Rips</button><button type="button" class="btn btn-p" data-act="buye" data-id="${id}"${brk ? ' disabled' : ''}>Pay ${eur(s.price)} by card</button></div>
+  <p class="fine">Demo only. The card button takes no payment.</p>`);
+}
+function buySlab(id, withRips) {
+  const s = SLABS.find(x => x.id === id);
+  if (!s || S.slabs.includes(id) || onBreak()) return;
+  if (withRips) { if (!spend(s.price)) return; hist('Graded card ' + s.cert, -s.price); }
+  else hist('Graded card ' + s.cert + ', paid ' + eur(s.price) + ' by card in demo mode', 0);
+  S.slabs.push(id);
+  S.cards.unshift({id: uid('g'), pid: s.pid, rar: s.rar, num: s.num, val: s.price, src: 'shop', st: 'vault', grade: s.grade, grader: s.grader, cert: s.cert, at: now()});
+  dlg.close(); render(); toast('The slab is in your vault.');
+}
+function topUp(e) {
+  if (onBreak()) { toast('You are on a break. Top-ups are paused.'); return; }
+  const lim = effLimit(), spent = monthSpent();
+  if (lim != null && spent + e > lim) {
+    modal(`<h2 class="h3">That top-up is over your limit</h2><p>Your limit is ${eur(lim)} a month. You have topped up ${eur(spent)} this month, so ${eur(Math.max(0, lim - spent))} is left.</p><p class="muted">A higher limit starts 24 hours after you set it.</p><div class="row end"><button type="button" class="btn btn-p" data-act="close">OK</button></div>`);
+    return;
+  }
+  const b = BUNDLES.find(x => x.eur === e);
+  if (!b) return;
+  S.tops.push({at: now(), eur: e, left: e}); S.bonus += b.extra;
+  hist('Top-up of ' + eur(e) + ' in demo mode', e + b.extra);
+  render(); toast(fmtR(e + b.extra) + ' Rips added. No payment was taken.');
+}
+function setLimit(n) {
+  const cur = effLimit();
+  if (cur != null && (n === null || n > cur)) {
+    S.limit.pend = {amt: n, at: now() + 864e5};
+    toast(n === null ? 'Your limit ends in 24 hours.' : 'Your new limit starts in 24 hours.');
+  } else {
+    S.limit.amt = n; S.limit.pend = null;
+    toast('Your limit is now ' + eur(n) + ' a month.');
+  }
+  render();
+}
+
+/* actions */
+const ACT = {
+  pos: t => { R.pos = +t.dataset.pos; render(); },
+  lucky: () => {
+    const p = P(R.pid), op = opened(p), free = range(GAMES[p.g].packs).filter(i => !op.has(i));
+    if (free.length) R.pos = free[Math.floor(Math.random() * free.length)];
+    render();
+  },
+  mode: t => { R.mode = t.value; render(); },
+  ok: t => { R.ok = t.checked; render(); },
+  pay: () => {
+    const p = P(R.pid), price = priceOf(p);
+    if (!R.pos || bal() < price || onBreak() || opened(p).has(R.pos)) return;
+    if (R.mode === 'open' && !R.ok) return;
+    spend(price);
+    (S.taken[p.id] = S.taken[p.id] || []).push(R.pos);
+    if (R.mode === 'seal') {
+      R.sealedId = uid('p');
+      S.sealed.unshift({id: R.sealedId, pid: p.id, pos: R.pos, paid: price, at: now()});
+      hist(p.set + ' pack ' + R.pos + ', kept sealed', -price);
+      R.stage = 'sealed';
+    } else {
+      hist(p.set + ' pack ' + R.pos + ', opened on camera', -price);
+      R.stage = 'queue';
+    }
+    render(); window.scrollTo(0, 0);
+  },
+  next: () => { R.shown++; if (R.shown >= R.cards.length) finishReveal(); else render(); },
+  all: () => finishReveal(),
+  rsel: t => { const id = t.dataset.id; R.sel.has(id) ? R.sel.delete(id) : R.sel.add(id); render(); },
+  rsell: () => sellDlg([...R.sel], 'rip'),
+  again: () => { R = freshRip(R.pid); render(); window.scrollTo(0, 0); },
+  vsel: t => { const id = t.dataset.id; V.sel.has(id) ? V.sel.delete(id) : V.sel.add(id); render(); },
+  vclear: () => { V.sel.clear(); render(); },
+  vsell: () => sellDlg([...V.sel], 'vault'),
+  vship: () => shipDlg(),
+  vgrade: () => gradeDlg(),
+  vopen: t => openDlg(t.dataset.id),
+  zone: t => { SHIPZ = t.value; shipDlg(); },
+  sellgo: () => {
+    if (!PEND) return;
+    let tot = 0, n = 0;
+    PEND.ids.forEach(id => { const c = S.cards.find(x => x.id === id); if (c && c.src === 'pack' && c.st === 'vault') { c.st = 'sold'; tot += offer(c.val); n++; } });
+    S.buyback += tot; hist('Sold ' + plural(n, 'card') + ' back', tot);
+    if (PEND.ctx === 'rip' && R) R.sel.clear(); else V.sel.clear();
+    PEND = null; dlg.close(); render(); toast(fmtR(tot) + ' Rips added to your balance.');
+  },
+  shipgo: () => {
+    const items = shipItems(), q = shipCalc(items, SHIPZ);
+    if (!items.length || !spend(q.total)) return;
+    items.forEach(it => {
+      if (it.kind === 'card') S.cards.find(c => c.id === it.id).st = 'shipped';
+      else S.sealed = S.sealed.filter(s => s.id !== it.id);
+    });
+    const id = 'SH-' + (1001 + S.ships.length);
+    S.ships.unshift({id, z: SHIPZ, n: q.n, value: q.value, cost: q.total, at: now(), trk: 'DEMO' + Math.floor(1e8 + Math.random() * 9e8)});
+    hist('Shipment ' + id + ' to ' + ZONES[SHIPZ][0], -q.total);
+    V.sel.clear(); dlg.close();
+    toast('Shipment ' + id + ' created. We pack it within one working day.');
+    go('#vault/ships');
+  },
+  gradego: () => {
+    const cs = [...V.sel].map(id => S.cards.find(c => c.id === id)).filter(c => c && c.st === 'vault' && !c.grade);
+    const cost = cs.length * GRADE_COST;
+    if (!cs.length || !spend(cost)) return;
+    cs.forEach(c => { c.st = 'grading'; });
+    hist(plural(cs.length, 'card') + ' sent to grading', -cost);
+    V.sel.clear(); dlg.close(); render(); toast('Sent to grading. We track it both ways.');
+  },
+  okseal: t => { const b = $('#opengo'); if (b) b.disabled = !t.checked; },
+  opengo: t => {
+    const s = S.sealed.find(x => x.id === t.dataset.id);
+    if (!s || onBreak()) return;
+    S.sealed = S.sealed.filter(x => x.id !== s.id);
+    hist(P(s.pid).set + ' pack ' + s.pos + ', opened from the vault', 0);
+    R = {...freshRip(s.pid), pos: s.pos, ok: true, stage: 'queue'};
+    dlg.close(); lastV = 'rip'; go('#rip/' + s.pid);
+  },
+  buy: t => buyDlg(t.dataset.id),
+  buyc: t => buySlab(t.dataset.id, true),
+  buye: t => buySlab(t.dataset.id, false),
+  top: t => topUp(+t.dataset.eur),
+  limset: () => {
+    const raw = ($('#limv').value || '').replace(',', '.').replace(/[^0-9.]/g, '');
+    const n = Math.round(parseFloat(raw) * 100);
+    if (!(n >= 0)) { toast('Enter an amount in euros.'); return; }
+    setLimit(n);
+  },
+  limoff: () => setLimit(null),
+  brk: () => modal(`<h2 class="h3">Take a 24-hour break?</h2><p>Top-ups, packs, and the shop pause until ${time(now() + 864e5)}. You can still ship what you own. You can't end the break early.</p><div class="row end">${cancelBtn}<button type="button" class="btn btn-p" data-act="brkgo">Start my break</button></div>`),
+  brkgo: () => { S.brk = now() + 864e5; hist('24-hour break started', 0); dlg.close(); render(); },
+  check: async () => {
+    const out = $('#fpres'), txt = $('#rec').value;
+    try {
+      PUB = PUB || await sha(RECORD);
+      const h = await sha(txt), ok = h === PUB;
+      out.innerHTML = `<span class="mono small">${h}</span><span class="${ok ? 'goodbox' : 'warnbox'}" style="margin:0">${ok ? 'This matches the published fingerprint.' : 'This does not match. The record was changed.'}</span>`;
+    } catch (e) { out.innerHTML = '<span class="warnbox">This browser cannot work out fingerprints here.</span>'; }
+  },
+  restore: () => { $('#rec').value = RECORD; $('#fpres').innerHTML = ''; },
+  reset: () => modal(`<h2 class="h3">Reset the demo?</h2><p>This puts back the demo balance, cards, and packs. It also clears your limits, break, and history. Reloading the page does the same.</p><div class="row end">${cancelBtn}<button type="button" class="btn btn-p" data-act="resetgo">Reset demo</button></div>`),
+  resetgo: () => { S = initial(); R = null; V.sel.clear(); dlg.close(); go('#home'); toast('The demo is reset.'); },
+  close: () => dlg.close()
+};
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]');
+  if (!t || t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.disabled) return;
+  const fn = ACT[t.dataset.act];
+  if (fn) { e.preventDefault(); fn(t); }
+});
+document.addEventListener('change', e => {
+  const t = e.target.closest('input[data-act],select[data-act]');
+  if (!t) return;
+  const fn = ACT[t.dataset.act];
+  if (fn) fn(t);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'limv') ACT.limset(); });
+addEventListener('hashchange', render);
+render();
+})();
+</script>
+</body>
+</html>

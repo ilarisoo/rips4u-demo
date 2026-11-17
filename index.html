@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141414'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%23f2b33d'/%3E%3C/svg%3E">
 <title>Rips4u</title>
-<meta name="description" content="Rips4u demo. Pick a real sealed pack, watch it opened on camera, keep, ship, or sell back the cards.">
+<meta name="description" content="Rips4u demo. Co-buy real sealed packs in 10 slots and own a share of every card, or buy a pack alone. Keep, ship, or sell the cards.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..900&family=Inter:wght@400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -102,7 +102,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .nav{display:none}
   .howlink{display:inline;margin-left:auto}
   .bal{margin-left:0}
-  .tabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+  .tabs{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
   .tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:62px;text-decoration:none;font-size:11.5px;font-weight:600;color:var(--muted)}
   .tabs a[aria-current="page"]{color:var(--accent)}
   .tabs svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -359,6 +359,57 @@ button,input,select,textarea{font:inherit;color:inherit}
 .faq details[open] summary::after{content:"\2212"}
 .faq p{margin:0 0 14px;color:var(--muted);max-width:70ch}
 
+/* co-buy: the golden meter */
+.btn-gold{background:linear-gradient(180deg,#ffe592,#f2b33d 60%,#d9930f);color:#2a1a00;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 18px rgba(242,179,61,.25)}
+.btn-gold:hover:not(:disabled){filter:brightness(1.06)}
+.gm{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:4px;padding:4px;border-radius:12px;background:var(--sunk);box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+.seg{position:relative;height:28px;border-radius:7px;display:grid;place-items:center;font:700 10.5px/1 var(--mono);letter-spacing:-.02em;color:transparent;background:color-mix(in srgb,var(--ink) 7%,transparent);overflow:hidden;min-width:0}
+.seg.t{background:linear-gradient(180deg,#ffe9a8,#f2b33d 55%,#b9790f);color:#4a2f05;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -2px 0 rgba(0,0,0,.15)}
+.seg.me{background:linear-gradient(180deg,#fff4cf,#ffc94d 50%,#d98b0a);color:#2a1a00;box-shadow:inset 0 0 0 2px #2a1a00,inset 0 1px 0 rgba(255,255,255,.7)}
+.seg.t::after,.seg.me::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.6) 50%,transparent 65%);transform:translateX(-130%);animation:sheen 3.4s ease-in-out infinite;animation-delay:calc(var(--i) * .09s)}
+@keyframes sheen{55%,100%{transform:translateX(130%)}}
+.seg.new{animation:pour .8s cubic-bezier(.2,.9,.25,1.25)}
+@keyframes pour{0%{transform:translateY(-150%) scale(.4) rotate(-20deg);opacity:0}50%{opacity:1}100%{transform:none}}
+.gm.big{gap:6px;padding:6px;border-radius:16px}
+.gm.big .seg{height:56px;border-radius:10px;font-size:12px}
+.gm.full{animation:gpulse 1.1s ease-in-out infinite}
+@keyframes gpulse{50%{box-shadow:0 0 0 3px rgba(242,179,61,.55),0 0 32px rgba(242,179,61,.5)}}
+.gmh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 8px;font-size:14px;color:var(--muted)}
+.gmh b{color:var(--ink);font-family:var(--disp);font-size:22px;font-variant-numeric:tabular-nums}
+.gmh b em{font-style:normal;color:#f2b33d}
+.pot{position:relative;display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:20px;background:radial-gradient(90% 70% at 50% 0%,rgba(242,179,61,.18),transparent 70%),var(--surface);border:1px solid rgba(242,179,61,.35)}
+.pot-h{display:flex;gap:14px;align-items:center}
+.pot-h b{display:block;font-family:var(--disp);font-size:20px;line-height:1.15}
+.pot .btn-gold{min-height:54px;font-size:17px}
+.pot-tag{position:absolute;top:16px;right:16px}
+@media (max-width:520px){.pot-tag{position:static;align-self:flex-start;order:-1}}
+.pools{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:16px}
+.pool{display:flex;flex-direction:column;gap:12px;padding:16px;min-width:0}
+.pool-h{display:flex;gap:12px;align-items:center}
+.pool-h>div{flex:1;min-width:0;display:flex;flex-direction:column}
+.pool-h b{font-weight:750;line-height:1.2}
+.pool-m{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.pool-m b{color:var(--ink)}
+.pool .row .btn{flex:1}
+.holders{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.holders span{font:600 12.5px/1 var(--sans);padding:7px 10px;border-radius:999px;background:var(--sunk)}
+.holders span.me{background:#f2b33d;color:#2a1a00}
+.rules{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.rules li{position:relative;padding-left:22px;color:var(--muted);font-size:14.5px}
+.rules li::before{content:"";position:absolute;left:2px;top:7px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffeeb5,#e9ad2a 58%,#b47a0e)}
+.rules b{color:var(--ink)}
+.share{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px;margin-bottom:12px}
+.share .tc{width:64px}
+.share-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.share-a{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.lot{width:64px;aspect-ratio:63/88;border-radius:8px;background:repeating-linear-gradient(0deg,var(--sunk) 0 6px,var(--surface) 6px 9px);border:1px solid var(--line);display:grid;place-items:center;font:700 13px var(--mono);color:var(--muted)}
+.sharebar{height:6px;border-radius:9px;background:var(--sunk);overflow:hidden;max-width:220px}
+.sharebar i{display:block;height:100%;background:linear-gradient(90deg,#ffe08a,#f2b33d)}
+@media (max-width:620px){.share{grid-template-columns:56px 1fr}.share .tc,.share .lot{width:56px}.share-a{grid-column:1/-1;align-items:stretch;flex-direction:row;flex-wrap:wrap}}
+.opening{padding:22px;border-radius:20px;background:var(--mat);color:var(--mat-ink);border:1px solid rgba(242,179,61,.4)}
+.opening .prog i{background:linear-gradient(90deg,#ffe08a,#f2b33d)}
+.hero .pot{align-self:stretch;justify-content:center}
+
 /* footer, dialog, toast */
 .foot{margin-top:56px;padding:34px 0 30px;border-top:1px solid var(--line);background:var(--paper)}
 .fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px;margin-bottom:18px}
@@ -383,6 +434,7 @@ dialog::backdrop{background:rgba(8,12,18,.6)}
   <div class="bar wrap">
     <a class="logo" href="#home" aria-label="Rips4u home">Rips<span>4</span>u</a>
     <nav class="nav" aria-label="Main">
+      <a href="#cobuy" data-nav="cobuy">Co-buys</a>
       <a href="#packs" data-nav="packs">Packs</a>
       <a href="#vault" data-nav="vault">Vault</a>
       <a href="#shop" data-nav="shop">Graded shop</a>
@@ -402,9 +454,9 @@ dialog::backdrop{background:rgba(8,12,18,.6)}
     <div class="fgrid">
       <div>
         <a class="logo" href="#home">Rips<span>4</span>u</a>
-        <p class="muted">Real sealed packs, opened on camera and shipped from our vault in [WAREHOUSE_CITY].</p>
+        <p class="muted">Real sealed packs, bought alone or together, opened and scanned in our [WAREHOUSE_CITY] vault.</p>
       </div>
-      <div><b>Service</b><a href="#packs">Packs</a><a href="#vault">Vault</a><a href="#shop">Graded shop</a><a href="#wallet">Rips and limits</a></div>
+      <div><b>Service</b><a href="#cobuy">Co-buys</a><a href="#packs">Packs</a><a href="#vault">Vault</a><a href="#shop">Graded shop</a><a href="#wallet">Rips and limits</a></div>
       <div><b>Help</b><a href="#how">How it works</a><a href="#how/faq">Questions</a><a href="#wallet">Take a break</a></div>
     </div>
     <p class="fine">This page is a demo prototype. No payments are taken, and the packs, cards, and films shown don't exist. Card names and artwork are left out on purpose.</p>
@@ -415,6 +467,7 @@ dialog::backdrop{background:rgba(8,12,18,.6)}
 
 <nav class="tabs" aria-label="Main">
   <a href="#home" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+  <a href="#cobuy" data-nav="cobuy"><svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5M11 19c0-3 2.5-5 5-5s5 2 5 5"/></svg>Co-buy</a>
   <a href="#packs" data-nav="packs"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M6 7h12M6 17h12"/></svg>Packs</a>
   <a href="#vault" data-nav="vault"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3"/><path d="M3 9h2M3 16h2"/></svg>Vault</a>
   <a href="#shop" data-nav="shop"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 8h14M9 5.5h6"/></svg>Shop</a>
@@ -643,17 +696,37 @@ function initial() {
     sealed,
     ships: [{id: 'SH-1001', z: 'FI', n: 2, value: 1100, cost: 590, at: t - d * 12, trk: 'DEMO418230917'}],
     hist: [
+      {at: t - d, t: 'Private lobby slot, ' + P('me1').set, d: -Math.ceil(P('me1').price / 3)},
+      {at: t - 6 * d, t: '3 co-buy slots, ' + P('sv9').set, d: -3 * Math.ceil(P('sv9').price / 10)},
       ...sealed.map(x => ({at: x.at, t: P(x.pid).set + ' pack ' + x.pos + ', kept sealed', d: -x.paid})),
       {at: t - d * 12, t: 'Shipment SH-1001 to Finland', d: -590},
       {at: t - d * 20, t: 'Sold 6 cards back', d: 2100},
-      ...opens.map(([pid, pos]) => ({at: openedAt(pid, pos), t: P(pid).set + ' pack ' + pos + ', opened on camera', d: -P(pid).price})).reverse(),
+      ...opens.map(([pid, pos]) => ({at: openedAt(pid, pos), t: P(pid).set + ' pack ' + pos + ', opened and scanned', d: -P(pid).price})).reverse(),
       {at: t - d * 38, t: 'Top-up of €100.00 in demo mode', d: 10300},
       {at: t - d * 45, t: 'Top-up of €200.00 in demo mode', d: 20800}
     ],
     taken,
+    pools: seedPools(t, d, taken),
     limit: {amt: null, pend: null},
     brk: null, slabs: []
   };
+}
+function seedPools(t, d, taken) {
+  const mk = (id, pid, n, fill, extra) => {
+    const p = P(pid), pos = freePos(p, taken);
+    (taken[pid] = taken[pid] || []).push(pos);
+    return {id, pid, pos, n, slot: Math.ceil(p.price / n), fill, private: false, state: 'open', at: t - d, code: null, ...extra};
+  };
+  const done = mk('cb0', 'sv9', 10, ['me', 'me', 'me', 'Aino', 'Aino', 'Jonas', 'Elsa', 'Ville', 'Ville', 'Noah'], {state: 'opened', doneAt: t - 5 * d, settleAt: t + 9 * d + 5 * 36e5});
+  done.cards = packCards(P('sv9'), done.pos).map((c, i) => ({...c, id: 'cs' + i, pos: done.pos, src: 'pack', st: 'vault', at: t - 5 * d}));
+  return [
+    mk('cb1', 'me2', 10, ['Mika', 'Mika', 'Sanna', 'Jonas', 'Aino', 'Leo', 'Leo']),
+    mk('cb2', 'op13', 10, ['Elsa', 'Ville', 'Ville', 'Noah', 'Iida', 'Oskar', 'Emma', 'Emma']),
+    mk('cb3', 'sv10', 10, ['Tuomas', 'Lumi', 'Eetu', 'Sanna']),
+    mk('cb4', 'op12', 10, ['Leo', 'Mika']),
+    mk('cb5', 'me1', 3, ['me', 'Aino'], {private: true, code: 'K7Q2M'}),
+    done
+  ];
 }
 let S = initial();
 const bought = () => S.tops.reduce((a, x) => a + x.left, 0);
@@ -722,25 +795,38 @@ function home() {
   const slabs = SLABS.filter(s => !S.slabs.includes(s.id)).slice(0, 4);
   const mine = S.cards.filter(c => c.src === 'pack' && HIT.has(c.rar)).sort((a, b) => b.at - a.at).slice(0, 2);
   const pulls = [...mine, ...PULLS].slice(0, 6);
-  const fan = ['me2', 'sv10', 'op13'].map(id => packArt(P(id))).join('');
+  const feat = featured();
+  const pub = openPools().filter(x => x !== feat).sort((a, b) => b.fill.length / b.n - a.fill.length / a.n).slice(0, 3);
   return `
   <section class="hero">
     <div>
-      <p class="kick">Real sealed packs, opened on camera</p>
-      <h1 class="h1">Rip real packs. <span class="dim">We open them on camera for you.</span></h1>
-      <p class="lede">Pick a numbered pack from a sealed box. We film it from the seal to the last card. Then keep the cards, ship them home, or sell them back for Rips.</p>
-      <div class="row"><a class="btn btn-p" href="#packs">Pick a pack</a><a class="btn btn-s" href="#how">How it works</a></div>
-      <p class="fine">18+ only. No software decides what is in a pack.</p>
+      <p class="kick">Co-buy real sealed packs</p>
+      <h1 class="h1">Ten slots. One pack. <span class="dim">Everyone owns a share of every card.</span></h1>
+      <p class="lede">Take a slot in a numbered pack, or keep tapping to take more. When the last slot goes, we open the pack for all holders and scan every card. Then keep your share, bid for the whole lot, or sell it on.</p>
+      <div class="row"><a class="btn btn-gold" href="#cobuy">See all co-buys</a><a class="btn btn-s" href="#packs">Buy a whole pack</a></div>
+      <p class="fine">18+ only. No software decides what is in a pack. Filming the opening is optional.</p>
     </div>
-    <div class="fan" aria-hidden="true">${fan}<span class="live"><i></i>Live on table 2 <span id="tc">00:00:00</span></span></div>
+    ${pot(feat)}
   </section>
   <section class="heronotes">
-    <div><b>Sealed on arrival</b><span>We film every box as it arrives.</span></div>
-    <div><b>Up to 85% back</b><span>Sell cards back for Rips in one tap.</span></div>
-    <div><b>Tracked to your door</b><span>Finland from ${eur(ZONES.FI[1])}, Sweden from ${eur(ZONES.SE[1])}.</span></div>
+    <div><b>Opens when it's full</b><span>No timer. The last slot sends the pack to the table.</span></div>
+    <div><b>A share of every card</b><span>One slot of ten is 10% of each card in the pack.</span></div>
+    <div><b>We never take a slot</b><span>Only users fill co-buys. We never buy shares back.</span></div>
   </section>
   <section class="sec">
-    <div class="sech"><div><p class="kick">Hot packs</p><h2 class="h2">The most still to find. <span class="dim">Right now.</span></h2></div><a class="more" href="#packs">All ${PRODUCTS.length} boxes →</a></div>
+    <div class="sech"><div><p class="kick">Co-buys</p><h2 class="h2">Filling now. <span class="dim">Tap to take a slot.</span></h2></div><a class="more" href="#cobuy">All co-buys →</a></div>
+    <div class="pools">${pub.map(poolCard).join('')}</div>
+  </section>
+  <section class="sec">
+    <div class="sech"><div><p class="kick">How a co-buy works</p><h2 class="h2">Three steps. <span class="dim">One shared pack.</span></h2></div><a class="more" href="#how">Chain of custody →</a></div>
+    <ol class="steps3">
+      <li class="card"><b>Take a slot, or ten</b><p>Each slot is the pack price divided by the slots. Tap again to add more. Take every slot and the pack is yours alone.</p></li>
+      <li class="card"><b>It opens for everyone</b><p>When the last slot goes, we open the pack and scan every card for all holders. Filming is optional.</p></li>
+      <li class="card"><b>Settle your share</b><p>For 14 days, co-owners can bid to buy the whole lot. Otherwise we offer it to all users and split the money by share.</p></li>
+    </ol>
+  </section>
+  <section class="sec">
+    <div class="sech"><div><p class="kick">Buy a whole pack</p><h2 class="h2">The most still to find. <span class="dim">Right now.</span></h2></div><a class="more" href="#packs">All ${PRODUCTS.length} boxes →</a></div>
     <div class="grid4">${hot.map(p => prodTile(p, true)).join('')}</div>
     <p class="fine">We rank boxes by the estimated market value of one pack's cards, as a share of its price. These are estimates, not promises, and any pack can hold none of the big cards. <a href="#how/faq">How we work this out</a></p>
   </section>
@@ -748,14 +834,6 @@ function home() {
     <p class="kick">Recent pulls</p>
     <h2 class="h2">Fresh off the table</h2>
     <div class="pulls">${pulls.map(c => { const p = P(c.pid); return `<figure>${tcard(c)}<figcaption><b>${rarName(p.g, c.rar)}</b><span>${p.code} · pack ${c.pos}</span></figcaption></figure>`; }).join('')}</div>
-  </section>
-  <section class="sec">
-    <div class="sech"><div><p class="kick">How it works</p><h2 class="h2">Three steps. <span class="dim">One take.</span></h2></div><a class="more" href="#how">Chain of custody →</a></div>
-    <ol class="steps3">
-      <li class="card"><b>Pick a pack</b><p>Choose a set and a pack number from the box grid. The price is fixed before you pay.</p></li>
-      <li class="card"><b>Watch it opened</b><p>We film your pack from the seal to the last card, with no cuts.</p></li>
-      <li class="card"><b>Keep, ship, or sell back</b><p>Keep cards in your vault, post them home tracked, or sell them back for Rips.</p></li>
-    </ol>
   </section>
   <section class="sec">
     <div class="sech"><div><p class="kick">Graded shop</p><h2 class="h2">Slabs from our own vault</h2></div><a class="more" href="#shop">Open the shop →</a></div>
@@ -773,7 +851,7 @@ function packs(arg) {
   const f = arg === 'pk' || arg === 'op' ? arg : 'all';
   const list = PRODUCTS.filter(p => f === 'all' || p.g === f);
   const chip = (k, label, href) => `<a href="${href}"${f === k ? ' aria-current="page"' : ''}>${label}</a>`;
-  return `<section class="pagehead"><p class="kick">Packs</p><h1 class="h2">Pick a box, then pick your pack</h1><p class="lede">Every box was bought sealed and opened on camera. Each pack inside has a number, and opened numbers are greyed out.</p></section>
+  return `<section class="pagehead"><p class="kick">Packs</p><h1 class="h2">Pick a box, then pick your pack</h1><p class="lede">Every box was bought sealed and filmed as it arrived. Each pack inside has a number, and opened numbers are greyed out.</p></section>
   <div class="filters">${chip('all', 'All boxes', '#packs')}${chip('pk', 'Pokémon', '#packs/pk')}${chip('op', 'One Piece', '#packs/op')}</div>
   <div class="grid4">${list.map(p => prodTile(p)).join('')}</div>
   <p class="fine">Card value is the estimated market value of one pack's cards, as a share of its price. Buyback value is what we would pay for those cards in Rips. <a href="#how/faq">How we work this out</a></p>
@@ -786,7 +864,7 @@ function packs(arg) {
 
 /* rip flow */
 let R = null;
-const freshRip = pid => ({pid, pos: null, mode: 'open', ok: false, stage: 'pick', cards: [], shown: 0, sel: new Set()});
+const freshRip = pid => ({pid, pos: null, mode: 'open', film: false, ok: false, stage: 'pick', cards: [], shown: 0, sel: new Set()});
 function rip(pid) {
   const p = P(pid);
   if (!p) return `<div class="empty"><b>We couldn't find that box</b><a class="btn btn-s" href="#packs">See all packs</a></div>`;
@@ -832,9 +910,10 @@ function ripPick(p) {
     <div class="card pad">
       <h2 class="h3">2. Choose what happens</h2>
       <div class="choice">
-        <label class="opt${R.mode === 'open' ? ' on' : ''}"><input type="radio" name="mode" value="open" data-act="mode"${R.mode === 'open' ? ' checked' : ''}><b>Open it on camera</b><span>We film it in one take. The cards go to your vault.</span></label>
+        <label class="opt${R.mode === 'open' ? ' on' : ''}"><input type="radio" name="mode" value="open" data-act="mode"${R.mode === 'open' ? ' checked' : ''}><b>Open it for me</b><span>We open it in our vault and scan every card. The cards go to your vault.</span></label>
         <label class="opt${R.mode === 'seal' ? ' on' : ''}"><input type="radio" name="mode" value="seal" data-act="mode"${R.mode === 'seal' ? ' checked' : ''}><b>Keep it sealed</b><span>The pack waits in your vault. Open it later or ship it home unopened.</span></label>
       </div>
+      ${R.mode === 'open' ? `<label class="consent"><input type="checkbox" data-act="film"${R.film ? ' checked' : ''}><span>Film my opening too. We record it in one take and the film stays on your order. Optional.</span></label>` : ''}
       ${R.mode === 'open' ? `<label class="consent"><input type="checkbox" data-act="ok"${R.ok ? ' checked' : ''}><span>Open my pack straight away. Once it is opened I can't cancel or return it.</span></label>` : ''}
       <div class="sum">
         <div><span>Pack</span><b>${R.pos ? 'Number ' + R.pos : 'Not picked yet'}</b></div>
@@ -844,16 +923,17 @@ function ripPick(p) {
       ${need > 0 ? `<p class="warnbox">You need ${fmtR(need)} more Rips. <a href="#wallet">Get Rips</a></p>` : ''}
       ${brk ? `<p class="warnbox">You are on a break until ${time(S.brk)}.</p>` : ''}
       <button class="btn btn-p wide" data-act="pay"${can ? '' : ' disabled'}>Pay ${fmtR(price)} Rips</button>
+      <div class="goodbox" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:14px"><span><b>Split it ten ways.</b> Start a co-buy for ${fmtR(Math.ceil(price / 10))} Rips a slot.</span><button class="btn btn-gold sm" data-act="ripcb">Start a co-buy</button></div>
       <p class="fine">${!R.pos ? 'Pick a pack number to continue.' : R.mode === 'open' && !R.ok ? 'Tick the box to confirm the opening.' : 'Demo only. No money moves.'}</p>
     </div>
   </div>`;
 }
 function ripQueue(p) {
   return `<div class="mat queue" style="--qms:${RM ? '.6s' : '2.2s'}">
-    <div class="mat-top"><span class="rec"><i></i>Live</span><span>Table 2</span><span class="mono">${p.box}</span></div>
-    <div class="qbody"><p class="kick">Pack ${R.pos} · ${p.set}</p><h1 class="h2 light">Your pack is going to the table</h1>
+    <div class="mat-top"><span class="rec"><i></i>${R.film ? 'Live' : 'Vault'}</span><span>Table 2</span><span class="mono">${p.box}</span></div>
+    <div class="qbody"><p class="kick">Pack ${R.pos} · ${p.set}</p><h1 class="h2 light">${R.film ? 'Your pack is going to the table' : 'We are opening your pack'}</h1>
       <div class="prog"><i></i></div>
-      <ol class="qsteps"><li>Lifted from slot ${R.pos} in box ${p.box}</li><li>Seal checked on camera</li><li>Recording film ${vid(p, R.pos)}</li></ol>
+      <ol class="qsteps"><li>Lifted from slot ${R.pos} in box ${p.box}</li><li>Seal checked</li><li>${R.film ? 'Recording film ' + vid(p, R.pos) : 'Scanning each card'}</li></ol>
     </div>
   </div>`;
 }
@@ -894,7 +974,7 @@ function ripDone(p) {
   return `<div class="card pad" style="margin-top:24px">
     <p class="kick">Pack ${R.pos} opened</p>
     <h1 class="h2">Your ${cs.length} cards are in your vault</h1>
-    <div class="vstats"><div><b>${eur(total)}</b>market value today</div><div><b>${rarName(p.g, best.rar)}</b>best card, ${eur(best.val)}</div><div><b class="mono" style="font-size:15px">${vid(p, R.pos)}</b>film saved on this order</div></div>
+    <div class="vstats"><div><b>${eur(total)}</b>market value today</div><div><b>${rarName(p.g, best.rar)}</b>best card, ${eur(best.val)}</div><div><b class="mono" style="font-size:15px">${R.film ? vid(p, R.pos) : 'S-' + p.box.slice(2) + '-' + String(R.pos).padStart(2, '0')}</b>${R.film ? 'film saved on this order' : 'scan record on this order'}</div></div>
   </div>
   <div class="sech" style="margin-top:26px"><div><h2 class="h3">Sell any of them back</h2><p class="muted" style="margin:0">Tap cards to select them. Cards you keep stay in your vault.</p></div></div>
   <div class="vgrid">${tiles}</div>
@@ -905,13 +985,16 @@ function ripDone(p) {
 }
 function ripSealed(p) {
   const still = S.sealed.some(s => s.id === R.sealedId);
-  return `<div class="card pad center" style="max-width:560px;margin:30px auto 40px">${packArt(p, 'md')}<p class="kick">Kept sealed</p><h1 class="h2">Pack ${R.pos} is in your vault</h1><p class="muted">It stays sealed in its numbered slot. Open it on camera whenever you like, or ship it home unopened.</p><div class="row center">${still ? `<button class="btn btn-p" data-act="vopen" data-id="${R.sealedId}">Open it now</button>` : ''}<a class="btn btn-s" href="#vault/sealed">Go to vault</a><button class="btn btn-g" data-act="again">Pick another</button></div></div>`;
+  return `<div class="card pad center" style="max-width:560px;margin:30px auto 40px">${packArt(p, 'md')}<p class="kick">Kept sealed</p><h1 class="h2">Pack ${R.pos} is in your vault</h1><p class="muted">It stays sealed in its numbered slot. Open it whenever you like, or ship it home unopened.</p><div class="row center">${still ? `<button class="btn btn-p" data-act="vopen" data-id="${R.sealedId}">Open it now</button>` : ''}<a class="btn btn-s" href="#vault/sealed">Go to vault</a><button class="btn btn-g" data-act="again">Pick another</button></div></div>`;
 }
 
 /* vault */
 const V = {sel: new Set(), tab: 'cards'};
 function vault(arg) {
-  const tab = ['cards', 'sealed', 'ships'].includes(arg) ? arg : 'cards';
+  const tab = ['cards', 'shared', 'sealed', 'ships'].includes(arg) ? arg : 'cards';
+  const shares = S.pools.filter(x => x.state === 'opened' && mineN(x) && !x.settled);
+  const filling = S.pools.filter(x => x.state !== 'opened' && mineN(x));
+  const shareVal = shares.reduce((a, x) => a + Math.round(lotVal(x) * mineN(x) / x.n), 0);
   if (V.tab !== tab) { V.sel.clear(); V.tab = tab; }
   const cards = S.cards.filter(c => c.st === 'vault' || c.st === 'grading');
   const value = cards.reduce((a, c) => a + c.val, 0);
@@ -923,10 +1006,17 @@ function vault(arg) {
       const sub = c.src === 'shop' ? 'Graded shop' : 'Pack ' + c.pos + ' · ' + p.code;
       return `<button class="vt${on ? ' on' : ''}" data-act="vsel" data-id="${c.id}" aria-pressed="${on}"${grading ? ' disabled' : ''}>${c.grade ? slab(c) : tcard(c)}<span class="vt-m"><b>${rarName(p.g, c.rar)}</b><span>${sub}</span><span>${eur(c.val)}</span>${grading ? '<span class="tag warn">At grading</span>' : ''}</span><i class="tick" aria-hidden="true"></i></button>`;
     }).join('')}</div>` : `<div class="card empty"><b>No cards yet</b><p>Open a pack and the cards land here.</p><a class="btn btn-p" href="#packs">Pick a pack</a></div>`;
+  } else if (tab === 'shared') {
+    const done = S.pools.filter(x => x.settled && x.out && x.out.k !== 'whole' && mineN(x));
+    body = `<p class="muted" style="margin:0 0 14px">Packs you co-bought. You own a share of every card. In the 14 days after opening, bid to buy the whole pack or let it be sold to all users and split by share. We never buy shares back.</p>`
+      + (shares.length ? shares.map(shareRow).join('') : `<div class="card empty"><b>No shared packs right now</b><p>Take a slot in a co-buy and your share lands here when the pack opens.</p><a class="btn btn-gold" href="#cobuy">See co-buys</a></div>`)
+      + (filling.length ? `<h2 class="h3" style="margin-top:22px">Still filling</h2><div class="pools">${filling.map(poolCard).join('')}</div>` : '')
+      + (done.length ? `<h2 class="h3" style="margin-top:22px">Settled</h2>${done.map(x => `<div class="card pad" style="margin-bottom:10px"><b>${poolP(x).set} · pack ${x.pos}</b><p class="muted small" style="margin:4px 0 0">${outText(x)}</p></div>`).join('')}` : '')
+      + `<p class="fine">In this demo, your share of a sale lands as Rips. How co-owners get paid in the live service is still with our lawyers.</p>`;
   } else if (tab === 'sealed') {
     body = S.sealed.length ? S.sealed.map(s => {
       const p = P(s.pid), on = V.sel.has(s.id);
-      return `<div class="card srow">${packArt(p, 'xs')}<div class="srow-b"><b>${p.set}</b><span class="mono small muted">Pack ${s.pos} · box ${p.box}</span><span class="small muted">Kept sealed since ${day(s.at)}</span></div><div class="row"><button class="btn btn-p sm" data-act="vopen" data-id="${s.id}">Open on camera</button><button class="btn btn-s sm" data-act="vsel" data-id="${s.id}" aria-pressed="${on}">${on ? 'Selected to ship' : 'Select to ship'}</button></div></div>`;
+      return `<div class="card srow">${packArt(p, 'xs')}<div class="srow-b"><b>${p.set}</b><span class="mono small muted">Pack ${s.pos} · box ${p.box}</span><span class="small muted">Kept sealed since ${day(s.at)}</span></div><div class="row"><button class="btn btn-p sm" data-act="vopen" data-id="${s.id}">Open it</button><button class="btn btn-s sm" data-act="vsel" data-id="${s.id}" aria-pressed="${on}">${on ? 'Selected to ship' : 'Select to ship'}</button></div></div>`;
     }).join('') : `<div class="card empty"><b>No sealed packs</b><p>Choose "Keep it sealed" when you buy a pack and it waits here.</p></div>`;
   } else {
     body = S.ships.length ? `<div class="card pad"><table class="tbl"><thead><tr><th>Shipment</th><th>To</th><th class="n">Items</th><th class="n">Cost</th><th>Status</th></tr></thead><tbody>${S.ships.map(x => {
@@ -935,13 +1025,13 @@ function vault(arg) {
     }).join('')}</tbody></table></div>` : `<div class="card empty"><b>No shipments yet</b><p>Select cards or sealed packs and choose "Ship home".</p></div>`;
   }
   return `<section class="pagehead"><p class="kick">Vault</p><h1 class="h2">Your vault</h1>
-    <div class="vstats"><div><b>${cards.length}</b>cards</div><div><b>${eur(value)}</b>market value</div><div><b>${S.sealed.length}</b>sealed packs</div></div>
+    <div class="vstats"><div><b>${cards.length}</b>cards</div><div><b>${eur(value)}</b>market value</div><div><b>${eur(shareVal)}</b>in ${plural(shares.length, 'shared pack')}</div><div><b>${S.sealed.length}</b>sealed packs</div></div>
     <p class="muted" style="margin:6px 0 0">Every card sits in a sleeve and a numbered slot in our [WAREHOUSE_CITY] vault.</p></section>
-  <nav class="vtabs" aria-label="Vault sections">${t('cards', 'Cards', cards.length)}${t('sealed', 'Sealed packs', S.sealed.length)}${t('ships', 'Shipments', S.ships.length)}</nav>
+  <nav class="vtabs" aria-label="Vault sections">${t('cards', 'Cards', cards.length)}${t('shared', 'Shared', shares.length)}${t('sealed', 'Sealed packs', S.sealed.length)}${t('ships', 'Shipments', S.ships.length)}</nav>
   ${body}${vaultBar(tab)}`;
 }
 function vaultBar(tab) {
-  if (!V.sel.size || tab === 'ships') return '';
+  if (!V.sel.size || tab === 'ships' || tab === 'shared') return '';
   if (tab === 'sealed') {
     return `<div class="abar card"><div class="abar-t"><b>${plural(V.sel.size, 'pack')} selected</b><span class="muted small">They ship sealed</span></div><div class="row"><button class="btn btn-p" data-act="vship">Ship home</button><button class="btn btn-g" data-act="vclear">Clear</button></div></div>`;
   }
@@ -1009,9 +1099,9 @@ function how() {
     <div class="card pad"><h2 class="h3" style="margin-bottom:18px">The chain of custody</h2><ol class="chain">
       <li><div><b>A sealed box arrives</b><p>We buy sealed boxes from [DISTRIBUTOR]. Staff film each box as it arrives and log its wrap and weight.</p></div></li>
       <li><div><b>We number every pack</b><p>On camera, we cut the wrap and number each pack in the order it sits. The box record goes online before we sell a single pack.</p></div></li>
-      <li><div><b>You pick a number</b><p>You choose a pack from the box grid. The price is fixed before you pay.</p></div></li>
-      <li><div><b>One take on camera</b><p>The pack goes to the table. We film it from the seal to the last card with no cuts, and the film stays on your order.</p></div></li>
-      <li><div><b>Every card is scanned</b><p>Staff scan each card as it comes out. The scan must match the film before the cards reach your vault.</p></div></li>
+      <li><div><b>You pick a pack, or a slot</b><p>Buy a numbered pack alone, or take slots in a co-buy. The price is fixed before you pay.</p></div></li>
+      <li><div><b>Opened and scanned</b><p>The pack goes to the table. Staff open it and scan each card as it comes out, and the scan record stays on your order. A co-buy opens the moment its last slot is taken.</p></div></li>
+      <li><div><b>Film it if you like</b><p>Tick "Film my opening" and we record it from the seal to the last card in one take. Filming is optional.</p></div></li>
       <li><div><b>Your vault slot</b><p>Cards go into a sleeve and a numbered slot in our [WAREHOUSE_CITY] vault. They are yours.</p></div></li>
       <li><div><b>Your call</b><p>Keep them, sell them back for Rips, send them to grading, or ship them home.</p></div></li>
     </ol></div>
@@ -1030,7 +1120,11 @@ function how() {
   </section>
   <section class="sec faq" id="faq"><h2 class="h2" style="margin-bottom:12px">Questions</h2>
     <details open><summary>Are the packs real?</summary><p>Yes. Every pack is a physical pack from a box we bought sealed. No software decides what is in it. The cards were sealed in the pack at the factory.</p></details>
-    <details><summary>Can I watch my pack being opened?</summary><p>Yes. You can watch it as it happens, and the film stays on your order page. If any moment of the film is missing, write to us and we review the pack.</p></details>
+    <details><summary>Can I watch my pack being opened?</summary><p>If you want to. Opening on camera is optional: tick "Film my opening" and we film it in one take, and the film stays on your order page. Every pack is scanned card by card either way.</p></details>
+    <details><summary>How does a co-buy work?</summary><p>A co-buy cuts one numbered pack into slots, usually ten. Each slot costs the pack price divided by the slots. You can take one slot or tap again to take more. When the last slot is taken, we open the pack and scan every card for all holders at once. If a co-buy isn't full after 7 days, everyone gets their Rips back.</p></details>
+    <details><summary>What do I own with a slot?</summary><p>A share of every card in the pack, not one card. One slot of ten is 10% of each card. If you take every slot, every card is yours. In a private lobby with three slots, each friend owns a third.</p></details>
+    <details><summary>What happens to a shared pack after it opens?</summary><p>Co-owners have 14 days to settle. Any co-owner can place a sealed bid to buy the whole lot. The highest bid wins, the winner pays the others their share, and the cards go to the winner's vault. With no winning bid, we offer the lot to all users at market price and split the money by share.</p></details>
+    <details><summary>Do you take slots or buy shares back?</summary><p>No. Only users fill co-buys, and Rips4u never bids on a lot or buys a share. Shares can't be traded on their own.</p></details>
     <details><summary>Do you promise a hit every so many packs?</summary><p>No. Packs leave the factory as they are, and we can't change what is inside. The pull rates on the Packs page are records from boxes we opened. They are estimates, not promises.</p></details>
     <details><summary>What happens to a card I sell back?</summary><p>It becomes ours. We may grade it, sell it in our shop, or sell it elsewhere.</p></details>
     <details><summary>Can I turn Rips into money?</summary><p>Rips pay for packs, graded cards, postage, and grading. You can cancel an unspent top-up within 14 days. When you close your account, we refund the bought Rips you haven't spent. Bonus and buyback Rips are never paid out. We spend bought Rips first, so they run out before the other kinds.</p></details>
@@ -1040,8 +1134,237 @@ function how() {
   </section>`;
 }
 
+/* co-buys */
+const NAMES = ['Mika', 'Sanna', 'Jonas', 'Aino', 'Leo', 'Elsa', 'Ville', 'Noah', 'Iida', 'Oskar', 'Emma', 'Tuomas', 'Lumi', 'Eetu'];
+const mineN = pl => pl.fill.filter(x => x === 'me').length;
+const lotVal = pl => (pl.cards || []).reduce((a, c) => a + c.val, 0);
+const poolP = pl => P(pl.pid);
+const PL = id => S.pools.find(x => x.id === id);
+const openPools = () => S.pools.filter(x => x.state === 'open' && !x.private);
+function freePos(p, taken) {
+  const op = new Set([...baseOpened(p), ...(taken[p.id] || [])]);
+  const free = range(GAMES[p.g].packs).filter(i => !op.has(i));
+  return free.length ? free[Math.floor(free.length / 2)] : null;
+}
+function newPool(pid, n, priv, fill, want) {
+  const p = P(pid), pos = want && !opened(p).has(want) ? want : freePos(p, S.taken);
+  if (!pos) return null;
+  (S.taken[pid] = S.taken[pid] || []).push(pos);
+  const pl = {id: uid('cb'), pid, pos, n, slot: Math.ceil(priceOf(p) / n), fill: fill || [], private: !!priv, state: 'open', at: now(), code: priv ? Math.random().toString(36).slice(2, 7).toUpperCase() : null};
+  S.pools.unshift(pl);
+  return pl;
+}
+function addSlot(pl, who) {
+  if (pl.state !== 'open' || pl.fill.length >= pl.n) return false;
+  pl.newFrom = pl.fill.length; pl.newAt = now();
+  pl.fill.push(who);
+  if (pl.fill.length === pl.n) openPool(pl);
+  return true;
+}
+function openPool(pl) {
+  pl.state = 'opening'; pl.openAt = now();
+  setTimeout(() => finishPool(pl), RM ? 800 : 3400);
+}
+function finishPool(pl) {
+  if (!S.pools.includes(pl)) return;
+  const p = poolP(pl), m = mineN(pl);
+  pl.cards = packCards(p, pl.pos).map(c => ({...c, id: uid('c'), pos: pl.pos, src: 'pack', st: 'vault', at: now()}));
+  pl.state = 'opened'; pl.doneAt = now(); pl.settleAt = now() + 14 * 864e5;
+  if (m === pl.n) {
+    pl.cards.forEach(c => S.cards.unshift({...c}));
+    pl.settled = true; pl.out = {k: 'whole'};
+    toast('You held all ' + pl.n + ' slots. All ' + pl.cards.length + ' cards are in your vault.');
+  } else if (m) {
+    toast(p.set + ' pack ' + pl.pos + ' is open. You own ' + pct(m / pl.n) + ' of every card.');
+  } else {
+    S.pools = S.pools.filter(x => x !== pl);
+    const pick = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
+    newPool(pick.id, 10, false, Array.from({length: Math.floor(Math.random() * 3)}, () => NAMES[Math.floor(Math.random() * NAMES.length)]));
+  }
+  softRender();
+}
+function softRender() {
+  const {v} = route();
+  if (['home', 'cobuy', 'vault'].includes(v) && !dlg.open) render();
+}
+function meter(pl, big) {
+  const fresh = pl.newAt && now() - pl.newAt < 900;
+  const segs = range(pl.n).map((_, i) => {
+    const w = pl.fill[i], cls = !w ? '' : w === 'me' ? ' me' : ' t';
+    const isNew = fresh && i >= pl.newFrom && i < pl.fill.length;
+    const label = !w ? '' : w === 'me' ? (big ? 'YOU' : 'me') : w[0];
+    return `<span class="seg${cls}${isNew ? ' new' : ''}" style="--i:${i}" title="${w ? (w === 'me' ? 'Your slot' : w + '’s slot') : 'Free slot'}">${label}</span>`;
+  }).join('');
+  return `<div class="gm${big ? ' big' : ''}${pl.state !== 'open' ? ' full' : ''}" style="--n:${pl.n}" role="meter" aria-valuemin="0" aria-valuemax="${pl.n}" aria-valuenow="${pl.fill.length}" aria-label="${pl.fill.length} of ${pl.n} slots taken">${segs}</div>`;
+}
+function holders(pl) {
+  const g = {};
+  pl.fill.forEach(w => g[w] = (g[w] || 0) + 1);
+  return `<div class="holders">${Object.entries(g).sort((a, b) => (b[0] === 'me') - (a[0] === 'me') || b[1] - a[1]).map(([w, k]) => `<span class="${w === 'me' ? 'me' : ''}">${w === 'me' ? 'You' : w} · ${k} slot${k > 1 ? 's' : ''} · ${pct(k / pl.n)}</span>`).join('')}</div>`;
+}
+function addBtn(pl, cls) {
+  const m = mineN(pl), left = pl.n - pl.fill.length;
+  if (pl.state !== 'open') return `<a class="btn btn-s ${cls || ''}" href="#cobuy/${pl.id}">${pl.state === 'opening' ? 'Opening now' : 'See the cards'}</a>`;
+  const label = left === 1 ? 'Take the last slot' : m ? 'Add another slot' : 'Add a slot';
+  return `<button class="btn btn-gold ${cls || ''}" data-act="add" data-id="${pl.id}"${onBreak() ? ' disabled' : ''}>${label} · ${fmtR(pl.slot)} Rips</button>`;
+}
+function gmHead(pl) {
+  const left = pl.n - pl.fill.length, m = mineN(pl);
+  const right = pl.state === 'opening' ? '<span class="tag good">Full · opening</span>' : pl.state === 'opened' ? '<span class="tag good">Opened</span>' : `<span>${plural(left, 'slot')} left</span>`;
+  return `<div class="gmh"><span><b>${pl.fill.length}<em>/${pl.n}</em></b> slots taken${m ? ` · you hold ${m}` : ''}</span>${right}</div>`;
+}
+function poolCard(pl) {
+  const p = poolP(pl), e = boxEst(p), m = mineN(pl);
+  return `<div class="card pool">
+    <div class="pool-h">${packArt(p, 'xs')}<div><b>${p.set}</b><span class="mono small muted">Pack ${pl.pos} · box ${p.box}</span></div>${pl.private ? '<span class="tag warn">Private</span>' : ''}</div>
+    ${gmHead(pl)}${meter(pl)}
+    <div class="pool-m"><span>Slot <b>${fmtR(pl.slot)} Rips</b></span><span>Each slot owns <b>${pct(1 / pl.n)}</b> of every card</span><span>Card value <b>${pct(e.grossPct)}</b></span></div>
+    <div class="row">${addBtn(pl, 'sm')}<a class="btn btn-g sm" href="#cobuy/${pl.id}">Details</a></div>
+    ${m && pl.state === 'open' ? `<p class="fine" style="margin:0">Add again for more slots. Fill all ${pl.n} and the whole pack is yours.</p>` : ''}
+  </div>`;
+}
+let FEAT = null;
+function featured() {
+  const cur = FEAT && PL(FEAT);
+  if (cur && (cur.state !== 'opened' || now() - cur.doneAt < 20000) && !cur.private) return cur;
+  const list = openPools().sort((a, b) => b.fill.length / b.n - a.fill.length / a.n);
+  const pl = list.find(x => x.fill.length < x.n - 1) || list[0];
+  FEAT = pl ? pl.id : null;
+  return pl;
+}
+function pot(pl) {
+  if (!pl) return '';
+  const p = poolP(pl), m = mineN(pl);
+  const msg = pl.state === 'opening' ? `<p class="small" style="margin:0"><b>All ${pl.n} slots are taken.</b> We are opening pack ${pl.pos} and scanning every card for all ${pl.n} holders.</p>`
+    : pl.state === 'opened' ? `<p class="small" style="margin:0"><b>Opened.</b> ${plural(pl.cards.length, 'card')} worth ${eur(lotVal(pl))}. ${m ? `You own ${pct(m / pl.n)} of every one.` : ''}</p>`
+    : `<p class="fine" style="margin:0">${m ? `You hold ${m} of ${pl.n}. Tap again to add another slot. Fill all ${pl.n} and the whole pack is yours.` : `One tap takes one slot. Tap again for more. The pack opens for everyone when all ${pl.n} are taken.`}</p>`;
+  return `<div class="pot" aria-live="polite">
+    <span class="pot-tag tag">Filling now</span>
+    <div class="pot-h">${packArt(p, 'sm')}<div><p class="kick" style="margin:0 0 6px">Co-buy · ${GAMES[p.g].name}</p><b>${p.set}</b><span class="mono small muted">Pack ${pl.pos} · box ${p.box}</span></div></div>
+    <div>${gmHead(pl)}${meter(pl, true)}</div>
+    ${holders(pl)}
+    ${addBtn(pl, 'wide')}
+    ${msg}
+  </div>`;
+}
+const RULES = `<ul class="rules">
+  <li><b>One pack, cut into slots.</b> A slot costs the pack price divided by the slots. Ten slots is the usual split.</li>
+  <li><b>It opens when it is full.</b> The last slot taken sends the pack to the table. We open it and scan every card for all holders at once.</li>
+  <li><b>You own a share of every card.</b> One slot of ten is 10% of each card, not one card. Take every slot and the whole pack is yours.</li>
+  <li><b>14 days to settle.</b> Co-owners can bid to buy the whole lot, or it is offered to all users and the money is split by share.</li>
+  <li><b>We never take a slot.</b> And we never buy shares back. If a co-buy doesn't fill in 7 days, everyone gets their Rips back.</li>
+</ul>`;
+function cobuy(arg) {
+  if (arg) { const pl = PL(arg); if (pl) return cobuyOne(pl); }
+  const mine = S.pools.filter(x => mineN(x) && !x.settled);
+  const pub = openPools().filter(x => !mineN(x));
+  return `<section class="pagehead"><p class="kick">Co-buys</p><h1 class="h2">Split a sealed pack. <span class="dim">Own a share of every card.</span></h1><p class="lede">Each co-buy is one numbered pack cut into slots. Take one slot or keep tapping to take more. When the last slot goes, we open the pack for everyone.</p>
+    <div class="row"><button class="btn btn-gold" data-act="newcb">Start a co-buy</button><button class="btn btn-s" data-act="newpriv">Private lobby for friends</button></div></section>
+  ${mine.length ? `<section class="sec" style="margin-top:8px"><div class="sech"><div><p class="kick">Yours</p><h2 class="h3">Co-buys you are in</h2></div><a class="more" href="#vault/shared">Shared cards in your vault →</a></div><div class="pools">${mine.map(poolCard).join('')}</div></section>` : ''}
+  <section class="sec" style="margin-top:8px"><div class="sech"><div><p class="kick">Open to everyone</p><h2 class="h3">Filling now</h2></div></div><div class="pools">${pub.map(poolCard).join('') || '<div class="card empty"><b>Nothing filling right now</b><p>Start one and others can join.</p></div>'}</div></section>
+  <section class="sec two"><div class="card pad"><h2 class="h3">How a co-buy works</h2>${RULES}</div>
+    <div class="card pad"><h2 class="h3">Private lobbies</h2><p class="muted">Split a pack with friends. Pick 2 to 10 slots, share the invite link, and only people with the link can join. Three friends on a three-slot pack each own a third of every card.</p><button class="btn btn-s" data-act="newpriv">Start a private lobby</button><p class="fine">Filming is optional. Every pack is scanned card by card, and the scan record stays on the co-buy.</p></div></section>`;
+}
+function cobuyOne(pl) {
+  const p = poolP(pl), m = mineN(pl), e = boxEst(p);
+  const head = `<a class="back" href="#cobuy">All co-buys</a>`;
+  if (pl.state === 'opened') {
+    const tot = lotVal(pl), sh = m / pl.n;
+    const tiles = pl.cards.map(c => `<div class="vt">${tcard(c)}<span class="vt-m"><b>${rarName(p.g, c.rar)}</b><span>${eur(c.val)}</span>${m && !pl.out ? `<span>Your share ${eur(Math.round(c.val * sh))}</span>` : ''}</span></div>`).join('');
+    return `${head}<div class="card pad" style="margin-top:14px">
+      <p class="kick">Co-buy · pack ${pl.pos} opened</p><h1 class="h2">${p.set}</h1>
+      <div class="vstats"><div><b>${eur(tot)}</b>market value of the pack</div><div><b>${pl.n}</b>holders' slots</div>${m ? `<div><b>${pct(sh)}</b>your share, ${eur(Math.round(tot * sh))}</div>` : ''}<div><b class="mono" style="font-size:15px">S-${p.box.slice(2)}-${String(pl.pos).padStart(2, '0')}</b>scan record</div></div>
+      ${holders(pl)}</div>
+    ${m && !pl.settled ? shareRow(pl) : pl.out ? `<div class="goodbox" style="margin-top:14px">${outText(pl)}</div>` : ''}
+    <div class="sech" style="margin-top:22px"><div><h2 class="h3">Every card in the pack</h2><p class="muted" style="margin:0">${m === pl.n ? 'You held every slot, so every card is yours.' : 'Each holder owns a share of each card, by slot.'}</p></div></div>
+    <div class="vgrid" style="margin-bottom:30px">${tiles}</div>`;
+  }
+  const opening = pl.state === 'opening';
+  return `${head}<div class="ripgrid" style="margin-top:14px">
+    <div class="ripcol"><div class="card pad${opening ? ' opening' : ''}">
+      <div class="phead">${packArt(p, 'sm')}<div><p class="kick">Co-buy · ${GAMES[p.g].name}</p><h1 class="h2">${p.set}</h1><p class="mono small muted" style="margin:8px 0 0">Pack ${pl.pos} · box ${p.box}${pl.private ? ' · private lobby' : ''}</p></div></div>
+      ${gmHead(pl)}${meter(pl, true)}${holders(pl)}
+      ${opening ? `<h2 class="h3" style="margin-top:20px">Full. Opening for all ${pl.n} holders.</h2><p class="muted">Lifted from slot ${pl.pos}, seal checked, scanning each card.</p><div class="prog" style="--qms:3.4s"><i></i></div>` : `<div style="margin-top:18px">${addBtn(pl, 'wide')}</div><p class="fine">${m ? `You hold ${m}. Tap again to add another. Take all ${pl.n - pl.fill.length + m} and the whole pack is yours.` : 'Tap to take a slot. Tap again for more.'}</p>`}
+    </div>
+    ${pl.private && !opening ? `<div class="card pad"><h2 class="h3">Invite link</h2><p class="muted">Only people with this link can join. Send it to your friends.</p><p class="fpv mono">rips4u.com/j/${pl.code}</p><div class="row"><button class="btn btn-s sm" data-act="copy" data-id="${pl.id}">Copy link</button><button class="btn btn-g sm" data-act="friend" data-id="${pl.id}"${pl.fill.length >= pl.n ? ' disabled' : ''}>A friend joins (demo)</button></div></div>` : ''}
+    </div>
+    <div class="card pad"><h2 class="h3">What a slot gets you</h2>
+      <div class="sum"><div><span>Pack price</span><b>${fmtR(pl.slot * pl.n)} Rips</b></div><div><span>One slot</span><b>${fmtR(pl.slot)} Rips</b></div><div><span>Share of every card</span><b>${pct(1 / pl.n)}</b></div><div><span>Card value estimate</span><b>${pct(e.grossPct)} of price</b></div><div class="tot"><span>Balance</span><b>${fmtR(bal())} Rips</b></div></div>
+      ${RULES}
+      <p class="fine">Card value is an estimate, not a promise. Any pack can hold none of the big cards.</p>
+    </div>
+  </div>`;
+}
+function outText(pl) {
+  const o = pl.out;
+  if (!o) return '';
+  if (o.k === 'whole') return 'You held every slot. All the cards are in your vault.';
+  if (o.k === 'won') return `Your sealed bid won. You paid the other holders ${fmtR(-o.amt)} Rips and the whole pack is in your vault.`;
+  if (o.k === 'bid') return `A co-owner's bid of ${eur(o.price)} won. Your ${pct(o.sh)} share, ${fmtR(o.amt)} Rips, is in your balance.`;
+  return `Sold to another user for ${eur(o.price)}. Your ${pct(o.sh)} share, ${fmtR(o.amt)} Rips, is in your balance.`;
+}
+function shareRow(pl) {
+  const p = poolP(pl), m = mineN(pl), sh = m / pl.n, tot = lotVal(pl);
+  const best = pl.cards.reduce((a, c) => c.val > a.val ? c : a, pl.cards[0]);
+  const ms = Math.max(0, pl.settleAt - now()), d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24;
+  return `<div class="card share">${tcard(best)}
+    <div class="share-b"><b>${p.set} · pack ${pl.pos}</b><span class="small muted">${plural(pl.cards.length, 'card')} · ${m} of ${pl.n} slots · best card ${rarName(p.g, best.rar)}</span>
+      <div class="sharebar"><i style="width:${sh * 100}%"></i></div>
+      <span class="small"><b>${pct(sh)}</b> of ${eur(tot)} = <b>${eur(Math.round(tot * sh))}</b></span>
+      <span class="small muted">Settles in ${d} days ${h} h${pl.bid ? ` · your sealed bid ${eur(pl.bid)}` : ''}${pl.vote ? ' · you voted to sell to all users' : ''}</span></div>
+    <div class="share-a"><button class="btn btn-gold sm" data-act="bid" data-id="${pl.id}">${pl.bid ? 'Change my bid' : 'Bid to buy it whole'}</button><button class="btn btn-s sm" data-act="vote" data-id="${pl.id}" aria-pressed="${!!pl.vote}">${pl.vote ? 'Voted: sell to all' : 'Vote: sell to all users'}</button><button class="btn btn-g sm" data-act="settle" data-id="${pl.id}">Skip to day 14 (demo)</button></div>
+  </div>`;
+}
+function bidDlg(pl) {
+  const m = mineN(pl), sh = m / pl.n, tot = lotVal(pl);
+  modal(`<h2 class="h3">Sealed bid for the whole pack</h2>
+  <p class="muted">Co-owners can't see each other's bids. On day 14 the highest bid buys all ${plural(pl.cards.length, 'card')}. You own ${pct(sh)} already, so you pay only the other ${pct(1 - sh)} of your bid, split among the holders by slot.</p>
+  <label class="fld"><span>Your bid for the whole pack, in euros</span><input id="bidv" inputmode="decimal" autocomplete="off" value="${(pl.bid || tot) / 100}"></label>
+  <div class="sum"><div><span>Market value today</span><b>${eur(tot)}</b></div><div><span>You would pay</span><b>${pct(1 - sh)} of your bid</b></div></div>
+  <p class="fine">If another bid wins, your ${pct(sh)} of that bid comes to you. Rips4u never bids and never buys shares.</p>
+  <div class="row end">${cancelBtn}<button type="button" class="btn btn-gold" data-act="bidgo" data-id="${pl.id}">Place sealed bid</button></div>`);
+}
+function settle(pl) {
+  const m = mineN(pl), sh = m / pl.n, tot = lotVal(pl), p = poolP(pl);
+  const rival = Math.random() < .6 ? Math.round(tot * (.8 + Math.random() * .25)) : 0;
+  if (pl.bid && pl.bid > rival) {
+    const pay = Math.round(pl.bid * (1 - sh));
+    if (!spend(pay)) { toast('Your bid won, but you need ' + fmtR(pay - bal()) + ' more Rips to pay the other holders.'); return; }
+    pl.cards.forEach(c => S.cards.unshift({...c, at: now()}));
+    pl.out = {k: 'won', amt: -pay};
+    hist('Won the sealed bid for ' + p.set + ' pack ' + pl.pos, -pay);
+  } else {
+    const price = rival || Math.round(tot * .92), amt = Math.round(price * sh);
+    S.buyback += amt;
+    pl.out = {k: rival ? 'bid' : 'sold', price, amt, sh};
+    hist((rival ? 'Your share of the winning bid, ' : 'Your share of the sale, ') + p.set + ' pack ' + pl.pos, amt);
+  }
+  pl.settled = true;
+  dlg.close(); render(); toast(outText(pl));
+}
+let NEWP = {pid: 'me2', n: 10, priv: false};
+function startDlg() {
+  const p = P(NEWP.pid), sp = Math.ceil(priceOf(p) / NEWP.n), sizes = NEWP.priv ? [2, 3, 4, 5, 10] : [5, 10];
+  if (!sizes.includes(NEWP.n)) NEWP.n = 10;
+  modal(`<h2 class="h3">${NEWP.priv ? 'Start a private lobby' : 'Start a co-buy'}</h2>
+  <label class="fld"><span>Pack</span><select data-act="npid">${PRODUCTS.filter(x => boxEst(x).left > 0).map(x => `<option value="${x.id}"${x.id === NEWP.pid ? ' selected' : ''}>${x.set} · ${eur(priceOf(x))}</option>`).join('')}</select></label>
+  <div class="fld"><span>Slots</span><div class="row">${sizes.map(k => `<button type="button" class="btn sm ${k === NEWP.n ? 'btn-gold' : 'btn-s'}" data-act="nn" data-n="${k}">${k}</button>`).join('')}</div></div>
+  <label class="consent"><input type="checkbox" data-act="npriv"${NEWP.priv ? ' checked' : ''}><span>Private lobby. Only people with the invite link can join.</span></label>
+  <div class="sum"><div><span>Pack price</span><b>${fmtR(priceOf(p))} Rips</b></div><div><span>One slot</span><b>${fmtR(sp)} Rips</b></div><div><span>Each slot owns</span><b>${pct(1 / NEWP.n)} of every card</b></div></div>
+  <p class="fine">You take the first slot now. The pack opens when all ${NEWP.n} slots are taken. If they aren't taken in 7 days, everyone gets their Rips back.</p>
+  <div class="row end">${cancelBtn}<button type="button" class="btn btn-gold" data-act="newgo"${bal() < sp || onBreak() ? ' disabled' : ''}>Take the first slot · ${fmtR(sp)} Rips</button></div>`);
+}
+function takeSlot(pl) {
+  if (!pl || pl.state !== 'open' || pl.fill.length >= pl.n) return;
+  if (onBreak()) { toast('You are on a break. Co-buys are paused.'); return; }
+  if (!spend(pl.slot)) { toast('You need ' + fmtR(pl.slot - bal()) + ' more Rips for a slot.'); return; }
+  hist('Co-buy slot, ' + poolP(pl).set + ' pack ' + pl.pos, -pl.slot);
+  addSlot(pl, 'me');
+  render();
+}
+
 /* routing and rendering */
-const VIEWS = {home, packs, rip, vault, shop, wallet, how};
+const VIEWS = {home, packs, rip, vault, shop, wallet, how, cobuy};
 let timers = [], lastV = null;
 const later = (fn, ms) => timers.push(setTimeout(fn, ms));
 const every = (fn, ms) => timers.push(setInterval(fn, ms));
@@ -1052,17 +1375,9 @@ function route() {
 }
 function go(h) { if (location.hash === h) render(); else location.hash = h; }
 const MOUNT = {
-  home() {
-    let f = 0;
-    every(() => {
-      f++;
-      const tc = $('#tc');
-      if (tc) tc.textContent = [Math.floor(f / 3600), Math.floor(f / 60) % 60, f % 60].map(x => String(x).padStart(2, '0')).join(':');
-    }, 1000);
-  },
   rip() {
     if (!R) return;
-    if (R.stage === 'queue') later(() => { R.stage = 'film'; render(); }, RM ? 600 : 2200);
+    if (R.stage === 'queue') later(() => { if (R.film) { R.stage = 'film'; render(); } else startReveal(); }, RM ? 600 : 2200);
     if (R.stage === 'film') {
       const t0 = performance.now();
       every(() => {
@@ -1174,8 +1489,8 @@ function openDlg(id) {
   if (!s) return;
   if (onBreak()) { toast('You are on a break. Opening packs is paused.'); return; }
   const p = P(s.pid);
-  modal(`<h2 class="h3">Open pack ${s.pos} on camera?</h2>
-  <p class="muted">${p.set}, box ${p.box}. We take it from its vault slot to Table 2 and film it in one take.</p>
+  modal(`<h2 class="h3">Open pack ${s.pos}?</h2>
+  <p class="muted">${p.set}, box ${p.box}. We take it from its vault slot, open it, and scan every card.</p>
   <label class="consent"><input type="checkbox" data-act="okseal"><span>Open my pack straight away. Once it is opened I can't cancel or return it.</span></label>
   <div class="row end" style="margin-top:16px">${cancelBtn}<button type="button" class="btn btn-p" id="opengo" data-act="opengo" data-id="${id}" disabled>Open it now</button></div>`);
 }
@@ -1235,6 +1550,7 @@ const ACT = {
   },
   mode: t => { R.mode = t.value; render(); },
   ok: t => { R.ok = t.checked; render(); },
+  film: t => { R.film = t.checked; render(); },
   pay: () => {
     const p = P(R.pid), price = priceOf(p);
     if (!R.pos || bal() < price || onBreak() || opened(p).has(R.pos)) return;
@@ -1247,7 +1563,7 @@ const ACT = {
       hist(p.set + ' pack ' + R.pos + ', kept sealed', -price);
       R.stage = 'sealed';
     } else {
-      hist(p.set + ' pack ' + R.pos + ', opened on camera', -price);
+      hist(p.set + ' pack ' + R.pos + (R.film ? ', opened and filmed' : ', opened and scanned'), -price);
       R.stage = 'queue';
     }
     render(); window.scrollTo(0, 0);
@@ -1303,6 +1619,40 @@ const ACT = {
     R = {...freshRip(s.pid), pos: s.pos, ok: true, stage: 'queue'};
     dlg.close(); lastV = 'rip'; go('#rip/' + s.pid);
   },
+  add: t => takeSlot(PL(t.dataset.id)),
+  newcb: () => { NEWP.priv = false; startDlg(); },
+  newpriv: () => { NEWP.priv = true; startDlg(); },
+  npid: t => { NEWP.pid = t.value; startDlg(); },
+  nn: t => { NEWP.n = +t.dataset.n; startDlg(); },
+  npriv: t => { NEWP.priv = t.checked; startDlg(); },
+  newgo: () => {
+    const p = P(NEWP.pid), sp = Math.ceil(priceOf(p) / NEWP.n);
+    if (onBreak() || bal() < sp) return;
+    const pl = newPool(NEWP.pid, NEWP.n, NEWP.priv);
+    if (!pl) { toast('That box has no packs left.'); return; }
+    spend(pl.slot); hist('Started a co-buy, ' + p.set + ' pack ' + pl.pos, -pl.slot);
+    addSlot(pl, 'me');
+    dlg.close(); go('#cobuy/' + pl.id);
+  },
+  ripcb: () => {
+    const p = P(R.pid), sp = Math.ceil(priceOf(p) / 10);
+    if (onBreak() || bal() < sp) { toast('You need ' + fmtR(sp) + ' Rips for one slot.'); return; }
+    const pl = newPool(p.id, 10, false, null, R.pos);
+    if (!pl) return;
+    spend(pl.slot); hist('Started a co-buy, ' + p.set + ' pack ' + pl.pos, -pl.slot);
+    addSlot(pl, 'me'); R = null;
+    go('#cobuy/' + pl.id);
+  },
+  friend: t => { const pl = PL(t.dataset.id); if (pl) { addSlot(pl, NAMES.filter(n => !pl.fill.includes(n))[0] || 'Friend'); render(); } },
+  copy: t => { const pl = PL(t.dataset.id); try { navigator.clipboard.writeText('https://rips4u.com/j/' + pl.code); } catch (e) {} toast('Invite link copied.'); },
+  bid: t => { const pl = PL(t.dataset.id); if (pl) bidDlg(pl); },
+  bidgo: t => {
+    const pl = PL(t.dataset.id), n = Math.round(parseFloat((($('#bidv') || {}).value || '').replace(',', '.')) * 100);
+    if (!pl || !(n > 0)) { toast('Enter a bid in euros.'); return; }
+    pl.bid = n; dlg.close(); render(); toast('Sealed bid placed. Nobody else can see it.');
+  },
+  vote: t => { const pl = PL(t.dataset.id); if (pl) { pl.vote = !pl.vote; render(); } },
+  settle: t => { const pl = PL(t.dataset.id); if (pl) settle(pl); },
   buy: t => buyDlg(t.dataset.id),
   buyc: t => buySlab(t.dataset.id, true),
   buye: t => buySlab(t.dataset.id, false),
@@ -1343,6 +1693,14 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'limv') ACT.limset(); });
 addEventListener('hashchange', render);
+setInterval(() => {
+  if (document.hidden || Math.random() < .35) return;
+  const list = openPools().filter(x => x.fill.length < x.n);
+  if (!list.length) return;
+  const pl = list[Math.floor(Math.random() * list.length)];
+  addSlot(pl, NAMES[Math.floor(Math.random() * NAMES.length)]);
+  softRender();
+}, 4200);
 render();
 })();
 </script>

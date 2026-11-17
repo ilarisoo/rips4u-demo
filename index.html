@@ -410,6 +410,72 @@ button,input,select,textarea{font:inherit;color:inherit}
 .opening .prog i{background:linear-gradient(90deg,#ffe08a,#f2b33d)}
 .hero .pot{align-self:stretch;justify-content:center}
 
+/* welcome offer */
+dialog.dwel{max-width:440px;background:#0d0a05;color:#fff;overflow:visible;border:1px solid rgba(255,214,120,.35);box-shadow:0 0 0 1px rgba(0,0,0,.6),0 30px 90px rgba(0,0,0,.6),0 0 120px rgba(242,179,61,.25)}
+dialog.dwel::backdrop{background:radial-gradient(60% 60% at 50% 40%,rgba(60,38,6,.55),rgba(0,0,0,.85));backdrop-filter:blur(4px)}
+dialog.dwel .dlg{padding:0}
+.wel{position:relative;border-radius:18px;overflow:hidden;text-align:center}
+.wel-x{position:absolute;top:10px;right:10px;z-index:9;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:20px;line-height:1;cursor:pointer}
+.wel-x:hover{background:rgba(255,255,255,.2)}
+.wel-stage{position:relative;height:300px;overflow:hidden;background:radial-gradient(70% 80% at 50% 55%,#5a3a07 0%,#2a1a03 45%,#0d0a05 80%);touch-action:none;cursor:grab}
+.wel-rays{position:absolute;left:50%;top:55%;width:760px;height:760px;margin:-380px 0 0 -380px;background:repeating-conic-gradient(from 0deg,rgba(255,214,120,.16) 0 9deg,transparent 9deg 22deg);border-radius:50%;-webkit-mask:radial-gradient(circle,#000 10%,transparent 62%);mask:radial-gradient(circle,#000 10%,transparent 62%);animation:wspin 28s linear infinite}
+.wel-glow{position:absolute;left:50%;top:56%;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;background:radial-gradient(circle,rgba(255,220,130,.55),transparent 65%);animation:wbreath 2.6s ease-in-out infinite}
+.wel-sp{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff3c4;box-shadow:0 0 10px 2px #ffd36b;opacity:0;animation:wtw 2.4s ease-in-out infinite;animation-delay:var(--d)}
+.wel-pk{position:absolute;left:50%;top:50%;width:150px;margin-left:-75px;transform:translateY(-46%);animation:wfloat 3.2s ease-in-out infinite;z-index:3}
+.wel-pk .pack{width:150px;box-shadow:0 26px 50px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.25)}
+.wel-pk .pack-c{font-size:38px}
+.wel-pk .pack .shine{animation:wshine 2.8s ease-in-out infinite}
+.wel-top,.wel-body{position:absolute;left:0;top:0;width:100%}
+.wel-body{position:relative}
+.wel-top{clip-path:inset(0 0 81% 0);transform-origin:8% 19%;animation:wtease 3.2s ease-in-out infinite;z-index:2}
+.wel-body .pack{clip-path:inset(19% 0 0 0)}
+.wel-cut{position:absolute;left:-6px;right:-6px;top:19%;height:0;border-top:2px dashed rgba(255,255,255,.75);z-index:4;filter:drop-shadow(0 0 4px #ffd36b)}
+.wel-cut i{position:absolute;left:0;top:-4px;height:6px;width:var(--cut,0%);border-radius:3px;background:linear-gradient(90deg,#fff6d2,#ffd36b);box-shadow:0 0 14px 4px rgba(255,211,107,.9)}
+.wel-hint{position:absolute;left:0;right:0;bottom:14px;z-index:5;font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#ffe3a1;opacity:.9}
+.wel-hand{display:inline-block;animation:wswipe 1.6s ease-in-out infinite}
+.wel-cards{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1}
+.wel-cards .tc{position:absolute;width:104px;left:-52px;top:-70px;opacity:0}
+.wel-b{padding:18px 22px 22px;background:linear-gradient(180deg,#140e05,#0d0a05)}
+.wel-badge{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;font:700 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#2a1a00;background:linear-gradient(180deg,#ffe592,#f2b33d);box-shadow:0 0 18px rgba(242,179,61,.5)}
+.wel h2{margin:12px 0 0;font-family:var(--disp);font-weight:800;font-size:clamp(30px,8vw,40px);line-height:1;letter-spacing:-.03em;background:linear-gradient(180deg,#fff 30%,#ffd36b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wel-sub{margin:6px 0 0;font-family:var(--disp);font-weight:700;font-size:19px;color:#ffd36b}
+.wel-val{display:flex;justify-content:center;gap:10px;align-items:baseline;margin:12px 0 4px}
+.wel-val s{color:rgba(255,255,255,.45);font-size:15px}
+.wel-val b{font-family:var(--disp);font-size:26px;color:#fff}
+.wel p.m{color:rgba(255,255,255,.72);font-size:14.5px;margin:6px 0 14px}
+.wel-f{display:flex;flex-direction:column;gap:10px}
+.wel-f input{height:50px;border-radius:12px;border:1px solid rgba(255,214,120,.35);background:rgba(255,255,255,.06);padding:0 14px;font-size:16px;color:#fff;text-align:center}
+.wel-f input:focus{outline:2px solid #f2b33d;outline-offset:1px}
+.wel-f input.bad{border-color:#ff6b5a;animation:wshake .35s}
+.wel-f .btn{min-height:54px;font-size:17px;width:100%;justify-content:center}
+.wel-f .btn-gold{animation:gpulse 1.8s ease-in-out infinite}
+.wel .fine{color:rgba(255,255,255,.45);font-size:11.5px;margin:12px 0 0}
+.wel-code{display:flex;justify-content:center;gap:6px}
+.wel-code span{width:40px;height:50px;border-radius:10px;display:grid;place-items:center;font:700 22px/1 var(--mono);background:rgba(255,255,255,.07);border:1px solid rgba(255,214,120,.35);opacity:0;animation:fadein .2s forwards;animation-delay:calc(var(--i) * .12s)}
+.wel-stage.go{cursor:default}
+.wel-stage.go .wel-pk{animation:wshk .45s ease-in-out}
+.wel-stage.go .wel-top{animation:wrip .7s cubic-bezier(.3,.7,.3,1) .35s forwards}
+.wel-stage.go .wel-cut,.wel-stage.go .wel-hint{opacity:0;transition:opacity .2s .3s}
+.wel-stage.go .wel-body{animation:wdrop .7s ease-in .75s forwards}
+.wel-stage.go .wel-flash{animation:wflash .6s ease-out .45s}
+.wel-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#fff,rgba(255,220,130,.6) 30%,transparent 70%);opacity:0;z-index:6;pointer-events:none}
+.wel-stage.go .wel-cards{z-index:5}
+.wel-stage.go .wel-cards .tc{animation:wburst .8s cubic-bezier(.2,.9,.3,1.2) forwards;animation-delay:calc(.9s + var(--i) * .14s)}
+.wel-cards .tc.best{box-shadow:0 0 0 2px #ffd77e,0 0 30px 6px rgba(255,215,126,.7)}
+@keyframes wspin{to{transform:rotate(360deg)}}
+@keyframes wbreath{50%{transform:scale(1.15);opacity:.8}}
+@keyframes wtw{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+@keyframes wfloat{0%,100%{transform:translateY(-46%) rotate(-2deg)}50%{transform:translateY(-54%) rotate(2deg)}}
+@keyframes wshine{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+@keyframes wtease{0%,70%,100%{transform:none}80%{transform:rotate(-7deg) translateY(-3px)}90%{transform:rotate(-2deg)}}
+@keyframes wswipe{0%{transform:translateX(-26px)}60%{transform:translateX(26px)}100%{transform:translateX(26px);opacity:0}}
+@keyframes wshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes wshk{20%{transform:translateY(-50%) rotate(-5deg)}40%{transform:translateY(-50%) rotate(5deg)}60%{transform:translateY(-50%) rotate(-3deg)}100%{transform:translateY(-50%)}}
+@keyframes wrip{0%{transform:rotate(-8deg)}100%{transform:translate(170px,-190px) rotate(48deg);opacity:0}}
+@keyframes wdrop{to{transform:translateY(260px) rotate(6deg);opacity:0}}
+@keyframes wflash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@keyframes wburst{0%{opacity:0;transform:translateY(60px) scale(.6)}100%{opacity:1;transform:translate(calc((var(--i) - 1) * min(96px,24vw)),calc(-6px + (var(--i) - 1) * (var(--i) - 1) * 14px)) rotate(calc((var(--i) - 1) * 9deg)) scale(1)}}
+@media (prefers-reduced-motion:reduce){.wel *{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 /* footer, dialog, toast */
 .foot{margin-top:56px;padding:34px 0 30px;border-top:1px solid var(--line);background:var(--paper)}
 .fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px;margin-bottom:18px}
@@ -795,40 +861,40 @@ function home() {
   const slabs = SLABS.filter(s => !S.slabs.includes(s.id)).slice(0, 4);
   const mine = S.cards.filter(c => c.src === 'pack' && HIT.has(c.rar)).sort((a, b) => b.at - a.at).slice(0, 2);
   const pulls = [...mine, ...PULLS].slice(0, 6);
-  const feat = featured();
-  const pub = openPools().filter(x => x !== feat).sort((a, b) => b.fill.length / b.n - a.fill.length / a.n).slice(0, 3);
+  const fan = ['me2', 'sv10', 'op13'].map(id => packArt(P(id))).join('');
+  const pub = openPools().sort((a, b) => b.fill.length / b.n - a.fill.length / a.n).slice(0, 3);
   return `
   <section class="hero">
     <div>
-      <p class="kick">Co-buy real sealed packs</p>
-      <h1 class="h1">Ten slots. One pack. <span class="dim">Everyone owns a share of every card.</span></h1>
-      <p class="lede">Take a slot in a numbered pack, or keep tapping to take more. When the last slot goes, we open the pack for all holders and scan every card. Then keep your share, bid for the whole lot, or sell it on.</p>
-      <div class="row"><a class="btn btn-gold" href="#cobuy">See all co-buys</a><a class="btn btn-s" href="#packs">Buy a whole pack</a></div>
-      <p class="fine">18+ only. No software decides what is in a pack. Filming the opening is optional.</p>
+      <p class="kick">Real sealed packs</p>
+      <h1 class="h1">Rip real packs. <span class="dim">We open them for you.</span></h1>
+      <p class="lede">Pick a numbered pack from a sealed box. We open it in our vault and scan every card. Then keep the cards, ship them home, or sell them back for Rips.</p>
+      <div class="row"><a class="btn btn-p" href="#packs">Pick a pack</a><a class="btn btn-s" href="#how">How it works</a></div>
+      <p class="fine">18+ only. No software decides what is in a pack.</p>
     </div>
-    ${pot(feat)}
+    <div class="fan" aria-hidden="true">${fan}<span class="live"><i></i>Sealed · numbered · scanned</span></div>
   </section>
   <section class="heronotes">
-    <div><b>Opens when it's full</b><span>No timer. The last slot sends the pack to the table.</span></div>
-    <div><b>A share of every card</b><span>One slot of ten is 10% of each card in the pack.</span></div>
-    <div><b>We never take a slot</b><span>Only users fill co-buys. We never buy shares back.</span></div>
+    <div><b>Sealed on arrival</b><span>We log every box as it arrives and number each pack.</span></div>
+    <div><b>Up to 85% back</b><span>Sell cards back for Rips in one tap.</span></div>
+    <div><b>Tracked to your door</b><span>Finland from ${eur(ZONES.FI[1])}, Sweden from ${eur(ZONES.SE[1])}.</span></div>
   </section>
   <section class="sec">
-    <div class="sech"><div><p class="kick">Co-buys</p><h2 class="h2">Filling now. <span class="dim">Tap to take a slot.</span></h2></div><a class="more" href="#cobuy">All co-buys →</a></div>
-    <div class="pools">${pub.map(poolCard).join('')}</div>
+    <div class="sech"><div><p class="kick">Hot packs</p><h2 class="h2">The most still to find. <span class="dim">Right now.</span></h2></div><a class="more" href="#packs">All ${PRODUCTS.length} boxes →</a></div>
+    <div class="grid4">${hot.map(p => prodTile(p, true)).join('')}</div>
+    <p class="fine">We rank boxes by the estimated market value of one pack's cards, as a share of its price. These are estimates, not promises, and any pack can hold none of the big cards. <a href="#how/faq">How we work this out</a></p>
   </section>
   <section class="sec">
-    <div class="sech"><div><p class="kick">How a co-buy works</p><h2 class="h2">Three steps. <span class="dim">One shared pack.</span></h2></div><a class="more" href="#how">Chain of custody →</a></div>
+    <div class="sech"><div><p class="kick">How it works</p><h2 class="h2">Three steps. <span class="dim">Your pack.</span></h2></div><a class="more" href="#how">Chain of custody →</a></div>
     <ol class="steps3">
-      <li class="card"><b>Take a slot, or ten</b><p>Each slot is the pack price divided by the slots. Tap again to add more. Take every slot and the pack is yours alone.</p></li>
-      <li class="card"><b>It opens for everyone</b><p>When the last slot goes, we open the pack and scan every card for all holders. Filming is optional.</p></li>
-      <li class="card"><b>Settle your share</b><p>For 14 days, co-owners can bid to buy the whole lot. Otherwise we offer it to all users and split the money by share.</p></li>
+      <li class="card"><b>Pick a pack</b><p>Choose a set and a pack number from the box grid. The price is fixed before you pay.</p></li>
+      <li class="card"><b>We open it for you</b><p>We open your pack in our vault and scan every card. Want a film of it too? Tick a box.</p></li>
+      <li class="card"><b>Keep, ship, or sell back</b><p>Keep cards in your vault, post them home tracked, or sell them back for Rips.</p></li>
     </ol>
   </section>
   <section class="sec">
-    <div class="sech"><div><p class="kick">Buy a whole pack</p><h2 class="h2">The most still to find. <span class="dim">Right now.</span></h2></div><a class="more" href="#packs">All ${PRODUCTS.length} boxes →</a></div>
-    <div class="grid4">${hot.map(p => prodTile(p, true)).join('')}</div>
-    <p class="fine">We rank boxes by the estimated market value of one pack's cards, as a share of its price. These are estimates, not promises, and any pack can hold none of the big cards. <a href="#how/faq">How we work this out</a></p>
+    <div class="sech"><div><p class="kick">Co-buys</p><h2 class="h2">Too pricey alone? <span class="dim">Split it ten ways.</span></h2></div><a class="more" href="#cobuy">All co-buys →</a></div>
+    <div class="pools">${pub.map(poolCard).join('')}</div>
   </section>
   <section class="sec center">
     <p class="kick">Recent pulls</p>
@@ -1427,7 +1493,7 @@ function finishReveal() { R.shown = R.cards.length; R.stage = 'done'; R.sel = ne
 
 /* dialogs */
 const dlg = $('#dlg');
-function modal(html) { dlg.innerHTML = `<div class="dlg">${html}</div>`; if (!dlg.open) dlg.showModal(); }
+function modal(html) { dlg.classList.remove('dwel'); dlg.innerHTML = `<div class="dlg">${html}</div>`; if (!dlg.open) dlg.showModal(); }
 dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 const cancelBtn = '<button type="button" class="btn btn-g" data-act="close">Cancel</button>';
 let PEND = null, SHIPZ = 'FI', TOASTT = null;
@@ -1677,7 +1743,13 @@ const ACT = {
   restore: () => { $('#rec').value = RECORD; $('#fpres').innerHTML = ''; },
   reset: () => modal(`<h2 class="h3">Reset the demo?</h2><p>This puts back the demo balance, cards, and packs. It also clears your limits, break, and history. Reloading the page does the same.</p><div class="row end">${cancelBtn}<button type="button" class="btn btn-p" data-act="resetgo">Reset demo</button></div>`),
   resetgo: () => { S = initial(); R = null; V.sel.clear(); dlg.close(); go('#home'); toast('The demo is reset.'); },
-  close: () => dlg.close()
+  close: t => { dlg.close(); if (t.getAttribute('href')) location.hash = t.getAttribute('href'); },
+  welgo: () => {
+    const el = $('#welmail'), v = el.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v)) { el.classList.remove('bad'); void el.offsetWidth; el.classList.add('bad'); el.focus(); return; }
+    WEL.email = v; welCode();
+  },
+  welrip: () => welRip()
 };
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]');
@@ -1693,6 +1765,85 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'limv') ACT.limset(); });
 addEventListener('hashchange', render);
+/* welcome offer: shown on every visit */
+const WEL = {pid: 'sv10', email: '', cards: null, pos: null};
+function welPack() {
+  const p = P(WEL.pid), art = packArt(p);
+  const sp = [[14, 22, 0], [82, 18, .6], [22, 72, 1.1], [78, 70, 1.6], [50, 12, .9], [8, 48, 2], [92, 44, .3]].map(([x, y, d]) => `<i class="wel-sp" style="left:${x}%;top:${y}%;--d:${d}s"></i>`).join('');
+  return `<div class="wel-stage" id="welst"><div class="wel-rays"></div><div class="wel-glow"></div>${sp}
+    <div class="wel-cards" id="welcards"></div>
+    <div class="wel-pk"><div class="wel-body">${art}</div><div class="wel-top">${art}</div><div class="wel-cut"><i id="welcut"></i></div></div>
+    <div class="wel-flash"></div><div class="wel-hint" id="welhint" hidden>Swipe across the line to rip <span class="wel-hand">👉</span></div></div>`;
+}
+function welcome() {
+  if (dlg.open) return;
+  WEL.cards = null;
+  dlg.innerHTML = `<div class="dlg"><div class="wel">
+    <button type="button" class="wel-x" data-act="close" aria-label="Close">×</button>
+    ${welPack()}
+    <div class="wel-b" id="welb">${welOffer()}</div></div></div>`;
+  dlg.classList.add('dwel');
+  dlg.showModal();
+}
+function welOffer() {
+  return `<span class="wel-badge">★ Welcome offer</span>
+    <h2>Rip a Free Pack</h2>
+    <p class="wel-sub">No card required!</p>
+    <div class="wel-val"><s>$5.00</s><b>FREE</b></div>
+    <p class="m">Just verify your email and start ripping. A real sealed pack, opened for you.</p>
+    <div class="wel-f"><input id="welmail" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" aria-label="Email" value="${esc(WEL.email)}"><button type="button" class="btn btn-gold" data-act="welgo">Verify email &amp; rip free</button></div>
+    <p class="fine">18+ only. One free pack per person. $5 value. Demo: no email is sent.</p>`;
+}
+function esc(t) { return String(t).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c])); }
+function welCode() {
+  const code = '284613';
+  $('#welb').innerHTML = `<span class="wel-badge">✓ Code sent</span>
+    <h2>Check your inbox</h2>
+    <p class="m">We sent a 6-digit code to <b>${esc(WEL.email)}</b>.</p>
+    <div class="wel-code">${[...code].map((c, i) => `<span style="--i:${i}">${c}</span>`).join('')}</div>
+    <p class="fine">Demo: the code fills itself in.</p>`;
+  setTimeout(() => { if (dlg.open && $('#welb')) welReady(); }, 1500);
+}
+function welReady() {
+  $('#welb').innerHTML = `<span class="wel-badge">✓ Email verified</span>
+    <h2>Your pack is ready</h2>
+    <p class="m">Swipe across the dotted line on the pack to rip it open, or tap the button.</p>
+    <div class="wel-f"><button type="button" class="btn btn-gold" data-act="welrip">Rip it open</button></div>`;
+  const st = $('#welst'), hint = $('#welhint'), cut = $('#welcut');
+  hint.hidden = false;
+  let x0 = null;
+  st.onpointerdown = e => { x0 = e.clientX; st.setPointerCapture(e.pointerId); };
+  st.onpointermove = e => {
+    if (x0 == null || WEL.cards) return;
+    const w = Math.min(1, Math.abs(e.clientX - x0) / (st.clientWidth * .45));
+    cut.style.setProperty('--cut', (w * 100) + '%');
+    if (w >= 1) welRip();
+  };
+  st.onpointerup = st.onpointercancel = () => { x0 = null; if (!WEL.cards) cut.style.setProperty('--cut', '0%'); };
+}
+function welRip() {
+  if (WEL.cards) return;
+  const p = P(WEL.pid), free = range(GAMES[p.g].packs).filter(n => !opened(p).has(n));
+  WEL.pos = free[Math.floor(Math.random() * free.length)] || 1;
+  (S.taken[p.id] = S.taken[p.id] || []).push(WEL.pos);
+  WEL.cards = packCards(p, WEL.pos).map(c => ({...c, id: uid('c'), pos: WEL.pos, src: 'pack', st: 'vault', at: now()}));
+  S.cards.push(...WEL.cards);
+  hist('Free welcome pack, ' + p.set + ' pack ' + WEL.pos + ', opened and scanned', 0);
+  const top = [...WEL.cards].sort((a, b) => b.val - a.val).slice(0, 3);
+  const show = [top[1], top[0], top[2]].filter(Boolean);
+  $('#welcards').innerHTML = show.map((c, i) => tcard(c).replace('class="tc', `class="${c === top[0] ? 'best ' : ''}tc`).replace('style="--h:', `style="--i:${i};--h:`)).join('');
+  $('#welst').classList.add('go');
+  $('#welst').onpointermove = null;
+  const best = top[0];
+  setTimeout(() => {
+    if (!$('#welb')) return;
+    $('#welb').innerHTML = `<span class="wel-badge">🎉 Pack ripped</span>
+      <h2>${rarName(p.g, best.rar)}!</h2>
+      <p class="m">You opened ${p.set} pack ${WEL.pos}: ${WEL.cards.length} cards, and your best pull is worth <b>${eur(best.val)}</b>. Every card is in your vault. Keep them, ship them, or sell them back.</p>
+      <div class="wel-f"><a class="btn btn-gold" href="#vault" data-act="close">See my cards</a><a class="btn btn-s" href="#packs" data-act="close">Rip another pack</a></div>`;
+    softRender();
+  }, 1900);
+}
 setInterval(() => {
   if (document.hidden || Math.random() < .35) return;
   const list = openPools().filter(x => x.fill.length < x.n);
@@ -1702,6 +1853,9 @@ setInterval(() => {
   softRender();
 }, 4200);
 render();
+dlg.addEventListener('close', () => dlg.classList.remove('dwel'));
+dlg.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'welmail') { e.preventDefault(); ACT.welgo(); } });
+setTimeout(welcome, 700);
 })();
 </script>
 </body>
